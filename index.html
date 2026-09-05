@@ -102,35 +102,34 @@
   .opcion-fecha.activa{color:var(--teal); font-weight:800;}
 
   .secciones{
-    display:flex;
-    gap:16px;
-    flex-wrap:wrap;
-    justify-content:center;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
   }
   .seccion{
-    flex:1 1 240px;
     background:var(--panel);
     border:1px solid var(--border);
     border-radius:18px;
-    padding:20px 16px 24px;
+    padding:18px 10px 22px;
     text-align:center;
     display:flex;
     flex-direction:column;
     align-items:center;
+    min-width:0;
     box-shadow:0 2px 10px rgba(20,92,78,0.06);
   }
   .seccion h2{
     margin:0 0 10px;
-    font-size:1.15rem;
-    font-weight:800;
+    font-size:1.5rem;
+    font-weight:900;
     letter-spacing:0.5px;
   }
   #seccion-dinamica h2{color:var(--red);}
   #seccion-seguidores h2{color:var(--teal);}
 
   .icono{
-    width:52px;
-    height:52px;
+    width:64px;
+    height:64px;
     margin-bottom:14px;
   }
 
@@ -183,17 +182,18 @@
 
   .suma-total{
     text-align:center;
-    margin:26px 0 8px;
-    font-size:1.1rem;
+    margin:8px 0 24px;
+    font-size:1.35rem;
     color:var(--text-dim);
-    font-weight:600;
+    font-weight:800;
   }
   .suma-total span{
     display:block;
-    font-size:2.6rem;
+    font-size:5.2rem;
     font-weight:900;
     color:var(--teal-dark);
     margin-top:2px;
+    line-height:1;
   }
 
   hr.sep{
@@ -213,7 +213,7 @@
   .manzana-svg{width:78px; height:78px; margin-bottom:10px;}
   .pregunta-manzana{
     font-weight:700;
-    font-size:1.05rem;
+    font-size:1.35rem;
     margin:0 0 6px;
     line-height:1.4;
     color:var(--text);
@@ -245,11 +245,14 @@
   }
   .btn-porcentaje:hover{background:#e9e4d6;}
   .btn-porcentaje:active{transform:scale(0.94);}
-  .btn-porcentaje.top{
-    border-color:var(--red);
-    color:var(--red);
-  }
 
+  .titulo-resultado{
+    margin:0 0 14px;
+    font-size:1rem;
+    font-weight:800;
+    color:var(--text);
+    letter-spacing:0.3px;
+  }
   .resultado-manzana{
     display:flex;
     justify-content:center;
@@ -399,6 +402,7 @@
     <p class="pregunta-manzana">¿Porcentaje (aproximado) en que la gente prefiere sabor MANZANA?</p>
     <p class="subtitulo-manzana">Ingresar esta estimación la mayor cantidad de veces durante la jornada.</p>
     <div class="botones-porcentaje" id="botones-porcentaje"></div>
+    <h3 class="titulo-resultado">Preferencia de SABOR estimada</h3>
     <div class="resultado-manzana">
       <div class="resultado-item">
         <svg class="mini-fruta" viewBox="0 0 64 64" fill="none">
@@ -410,10 +414,10 @@
       </div>
       <div class="resultado-item">
         <svg class="mini-fruta" viewBox="0 0 64 64" fill="none">
-          <ellipse cx="32" cy="32" rx="22" ry="17" fill="#e8c022" transform="rotate(-20 32 32)"/>
-          <path d="M12 27c-3-2-6-2-8 0 2 3 5 4 9 3z" fill="#e8c022"/>
-          <path d="M52 37c3 2 6 2 8 0-2-3-5-4-9-3z" fill="#e8c022"/>
-          <path d="M20 20c3-3 7-4 9-2" stroke="#145c4e" stroke-width="3" stroke-linecap="round"/>
+          <path d="M14 32c0-11 8-19 18-19s18 8 18 19-8 19-18 19-18-8-18-19z" fill="#f2d024"/>
+          <path d="M13 20c-3-1-6 0-7 2 2 2 5 2 8 1z" fill="#f2d024"/>
+          <path d="M51 44c3 1 6 0 7-2-2-2-5-2-8-1z" fill="#f2d024"/>
+          <path d="M24 24c3-3 7-4 10-3" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
         </svg>
         <span class="valor-resultado" id="faltante-manzana">100%</span>
       </div>
@@ -627,7 +631,7 @@ setupCifra('Seguidores', 'input-seguidores', 'btn-seguidores',
 const cont = document.getElementById('botones-porcentaje');
 for(let p = 5; p <= 100; p += 5){
   const b = document.createElement('button');
-  b.className = 'btn-porcentaje' + (p === 100 ? ' top' : '');
+  b.className = 'btn-porcentaje';
   b.textContent = p + '%';
   b.addEventListener('click', () => abrirModal(p));
   cont.appendChild(b);
