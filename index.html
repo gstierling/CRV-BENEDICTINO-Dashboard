@@ -194,7 +194,14 @@
     color:var(--text-dim);
     font-weight:800;
   }
-  .suma-total span{
+  .hasta-ahora{
+    display:block;
+    font-size:0.85rem;
+    font-weight:600;
+    color:var(--text-dim);
+    margin-top:2px;
+  }
+  .suma-total span#suma-total{
     display:block;
     font-size:5.2rem;
     font-weight:900;
@@ -255,10 +262,17 @@
 
   .titulo-resultado{
     margin:0 0 10px;
-    font-size:1rem;
-    font-weight:800;
+    font-size:1.35rem;
+    font-weight:900;
     color:var(--text);
     letter-spacing:0.3px;
+  }
+  .estimada-chica{
+    display:block;
+    font-size:0.85rem;
+    font-weight:600;
+    color:var(--text-dim);
+    margin-top:2px;
   }
   .resultado-manzana{
     display:flex;
@@ -366,6 +380,7 @@
 
   <div class="suma-total">
     Botellas entregadas
+    <span class="hasta-ahora">(Hasta ahora)</span>
     <span id="suma-total">0</span>
   </div>
 
@@ -411,7 +426,7 @@
     <p class="linea-manzana">Porcentaje (aproximado) en que la gente prefiere sabor MANZANA.</p>
     <p class="linea-manzana">Ingresar esta estimación la mayor cantidad de veces durante la jornada.</p>
     <div class="botones-porcentaje" id="botones-porcentaje"></div>
-    <h3 class="titulo-resultado">Preferencia de SABOR estimada</h3>
+    <h3 class="titulo-resultado">Preferencia SABOR<span class="estimada-chica">(Estimada)</span></h3>
     <div class="resultado-manzana">
       <div class="resultado-item">
         <svg class="mini-fruta" viewBox="0 0 64 64" fill="none">
