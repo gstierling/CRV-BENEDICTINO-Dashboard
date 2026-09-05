@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BENEDICTINO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f3ec;
+    --panel:#ffffff;
+    --panel-2:#f2efe6;
+    --teal:#145c4e;
+    --teal-dark:#0d4238;
+    --red:#c0392b;
+    --red-dark:#9e2f22;
+    --text:#1c2b28;
+    --text-dim:#6b7b76;
+    --border:#e3ded2;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Nunito',sans-serif;
+    display:flex;
+    justify-content:center;
+    padding:24px 14px 60px;
+  }
+  .app-container{
+    width:100%;
+    max-width:640px;
+  }
+  .title{
+    text-align:center;
+    font-size:2.6rem;
+    font-weight:900;
+    letter-spacing:2px;
+    margin:0;
+    color:var(--teal);
+  }
+
+  /* ===== Selector de fecha (custom, no <select> nativo) ===== */
+  .selector-fecha-wrap{
+    position:relative;
+    display:flex;
+    justify-content:center;
+    margin:8px 0 28px;
+  }
+  .selector-fecha-btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    color:var(--text-dim);
+    font-family:'Nunito',sans-serif;
+    font-weight:700;
+    font-size:1.05rem;
+    padding:9px 16px;
+    border-radius:12px;
+    cursor:pointer;
+    text-transform:capitalize;
+    transition:border-color 0.15s ease;
+    box-shadow:0 1px 3px rgba(20,92,78,0.08);
+  }
+  .selector-fecha-btn:hover{border-color:var(--teal);}
+  .selector-fecha-btn .flecha{
+    width:16px;height:16px;color:var(--red);
+    transition:transform 0.15s ease;
+  }
+  .selector-fecha-wrap.abierto .flecha{transform:rotate(180deg);}
+  .selector-fecha-lista{
+    display:none;
+    position:absolute;
+    top:calc(100% + 6px);
+    left:50%;
+    transform:translateX(-50%);
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:12px;
+    min-width:230px;
+    max-height:260px;
+    overflow-y:auto;
+    z-index:40;
+    box-shadow:0 12px 28px rgba(20,92,78,0.18);
+  }
+  .selector-fecha-wrap.abierto .selector-fecha-lista{display:block;}
+  .opcion-fecha{
+    padding:11px 16px;
+    font-weight:600;
+    font-size:0.98rem;
+    color:var(--text);
+    cursor:pointer;
+    text-transform:capitalize;
+    border-bottom:1px solid var(--border);
+  }
+  .opcion-fecha:last-child{border-bottom:none;}
+  .opcion-fecha:hover{background:var(--panel-2);}
+  .opcion-fecha.activa{color:var(--teal); font-weight:800;}
+
+  .secciones{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .seccion{
+    flex:1 1 240px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:20px 16px 24px;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    box-shadow:0 2px 10px rgba(20,92,78,0.06);
+  }
+  .seccion h2{
+    margin:0 0 10px;
+    font-size:1.15rem;
+    font-weight:800;
+    letter-spacing:0.5px;
+  }
+  #seccion-dinamica h2{color:var(--red);}
+  #seccion-seguidores h2{color:var(--teal);}
+
+  .icono{
+    width:52px;
+    height:52px;
+    margin-bottom:14px;
+  }
+
+  .suma-parcial{
+    font-size:2.4rem;
+    font-weight:900;
+    line-height:1;
+    margin-bottom:8px;
+    min-height:2.4rem;
+    transition:transform 0.15s ease;
+  }
+  #seccion-dinamica .suma-parcial{color:var(--red);}
+  #seccion-seguidores .suma-parcial{color:var(--teal);}
+  .suma-parcial.bump{transform:scale(1.15);}
+
+  .cifra-input{
+    width:100%;
+    max-width:150px;
+    background:var(--panel-2);
+    border:2px solid var(--border);
+    border-radius:12px;
+    color:var(--text);
+    font-family:'Nunito',sans-serif;
+    font-size:1.6rem;
+    font-weight:800;
+    text-align:center;
+    padding:10px 6px;
+    margin-bottom:12px;
+    outline:none;
+  }
+  .cifra-input:focus{border-color:var(--red);}
+  #seccion-seguidores .cifra-input:focus{border-color:var(--teal);}
+
+  .btn-enviar{
+    border:none;
+    border-radius:10px;
+    padding:10px 26px;
+    font-family:'Nunito',sans-serif;
+    font-weight:800;
+    font-size:0.95rem;
+    cursor:pointer;
+    color:#ffffff;
+    transition:filter 0.15s ease, transform 0.1s ease;
+  }
+  .btn-enviar:active{transform:scale(0.96);}
+  #seccion-dinamica .btn-enviar{background:var(--red);}
+  #seccion-seguidores .btn-enviar{background:var(--teal);}
+  .btn-enviar:hover{filter:brightness(1.1);}
+  .btn-enviar:disabled{opacity:0.5; cursor:not-allowed;}
+
+  .suma-total{
+    text-align:center;
+    margin:26px 0 8px;
+    font-size:1.1rem;
+    color:var(--text-dim);
+    font-weight:600;
+  }
+  .suma-total span{
+    display:block;
+    font-size:2.6rem;
+    font-weight:900;
+    color:var(--teal-dark);
+    margin-top:2px;
+  }
+
+  hr.sep{
+    border:none;
+    border-top:1px solid var(--border);
+    margin:34px 0;
+  }
+
+  .seccion-manzana{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:24px 18px 28px;
+    text-align:center;
+    box-shadow:0 2px 10px rgba(20,92,78,0.06);
+  }
+  .manzana-svg{width:78px; height:78px; margin-bottom:10px;}
+  .pregunta-manzana{
+    font-weight:700;
+    font-size:1.05rem;
+    margin:0 0 6px;
+    line-height:1.4;
+    color:var(--text);
+  }
+  .subtitulo-manzana{
+    font-weight:600;
+    font-size:0.88rem;
+    margin:0 0 18px;
+    line-height:1.4;
+    color:var(--text-dim);
+  }
+  .botones-porcentaje{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:8px;
+    margin-bottom:20px;
+  }
+  .btn-porcentaje{
+    background:var(--panel-2);
+    border:1px solid var(--border);
+    color:var(--text);
+    border-radius:10px;
+    padding:10px 4px;
+    font-family:'Nunito',sans-serif;
+    font-weight:700;
+    font-size:0.92rem;
+    cursor:pointer;
+    transition:background 0.15s ease, transform 0.1s ease;
+  }
+  .btn-porcentaje:hover{background:#e9e4d6;}
+  .btn-porcentaje:active{transform:scale(0.94);}
+  .btn-porcentaje.top{
+    border-color:var(--red);
+    color:var(--red);
+  }
+
+  .resultado-manzana{
+    display:flex;
+    justify-content:center;
+    gap:40px;
+  }
+  .resultado-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .mini-fruta{
+    width:44px;
+    height:44px;
+    margin-bottom:6px;
+  }
+  .valor-resultado{
+    font-size:1.8rem;
+    font-weight:900;
+    color:var(--teal);
+  }
+  .resultado-item:last-child .valor-resultado{color:var(--red);}
+
+  .modal-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(20,30,28,0.55);
+    align-items:center;
+    justify-content:center;
+    z-index:50;
+    padding:20px;
+  }
+  .modal-overlay.activo{display:flex;}
+  .modal{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:26px 24px;
+    max-width:320px;
+    width:100%;
+    text-align:center;
+  }
+  .modal p{
+    font-weight:700;
+    font-size:1.1rem;
+    margin:0 0 20px;
+    color:var(--text);
+  }
+  .modal-botones{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+  }
+  .modal-botones button{
+    flex:1;
+    border:none;
+    border-radius:10px;
+    padding:12px 0;
+    font-family:'Nunito',sans-serif;
+    font-weight:800;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  #modal-confirmar{background:var(--teal); color:#ffffff;}
+  #modal-cancelar{background:var(--panel-2); color:var(--text); border:1px solid var(--border) !important;}
+
+  .toast{
+    position:fixed;
+    bottom:22px;
+    left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:var(--panel);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:12px 20px;
+    border-radius:12px;
+    font-weight:700;
+    opacity:0;
+    transition:opacity 0.25s ease, transform 0.25s ease;
+    z-index:60;
+    pointer-events:none;
+    box-shadow:0 6px 18px rgba(20,92,78,0.15);
+  }
+  .toast.mostrar{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+  }
+  .toast.error{border-color:var(--red); color:var(--red);}
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <h1 class="title">BENEDICTINO</h1>
+
+  <div class="selector-fecha-wrap" id="selector-fecha-wrap">
+    <button class="selector-fecha-btn" id="selector-fecha-btn" type="button">
+      <span id="selector-fecha-label">Cargando fechas…</span>
+      <svg class="flecha" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="selector-fecha-lista" id="selector-fecha-lista"></div>
+  </div>
+
+  <div class="suma-total">
+    Botellas entregadas
+    <span id="suma-total">0</span>
+  </div>
+
+  <div class="secciones">
+    <div class="seccion" id="seccion-dinamica">
+      <h2>Dinámica</h2>
+      <svg class="icono" viewBox="0 0 64 64" fill="none">
+        <rect x="8" y="8" width="48" height="48" rx="10" stroke="#c0392b" stroke-width="4"/>
+        <circle cx="21" cy="21" r="4.5" fill="#c0392b"/>
+        <circle cx="43" cy="21" r="4.5" fill="#c0392b"/>
+        <circle cx="21" cy="43" r="4.5" fill="#c0392b"/>
+        <circle cx="43" cy="43" r="4.5" fill="#c0392b"/>
+        <circle cx="32" cy="32" r="4.5" fill="#c0392b"/>
+      </svg>
+      <div class="suma-parcial" id="suma-dinamica">0</div>
+      <input class="cifra-input" id="input-dinamica" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" placeholder="0">
+      <button class="btn-enviar" id="btn-dinamica">Enviar</button>
+    </div>
+
+    <div class="seccion" id="seccion-seguidores">
+      <h2>Seguidores</h2>
+      <svg class="icono" viewBox="0 0 64 64" fill="none">
+        <circle cx="26" cy="24" r="10" stroke="#145c4e" stroke-width="4"/>
+        <path d="M10 54c2-11 9-17 16-17s14 6 16 17" stroke="#145c4e" stroke-width="4" stroke-linecap="round"/>
+        <path d="M46 20l4 4 8-8" stroke="#145c4e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="50" cy="18" r="12" stroke="#145c4e" stroke-width="3" opacity="0.35"/>
+      </svg>
+      <div class="suma-parcial" id="suma-seguidores">0</div>
+      <input class="cifra-input" id="input-seguidores" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" placeholder="0">
+      <button class="btn-enviar" id="btn-seguidores">Enviar</button>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <div class="seccion-manzana">
+    <svg class="manzana-svg" viewBox="0 0 64 64" fill="none">
+      <path d="M32 22c-9-9-22-6-24 6-2 13 8 27 18 30 3 1 5 1 8 0 10-3 20-17 18-30-2-12-15-15-24-6z" fill="#c0392b"/>
+      <path d="M32 22c0-4 1-8 5-11" stroke="#0d4238" stroke-width="3" stroke-linecap="round"/>
+      <path d="M31 12c4-3 9-2 11 1-3 3-8 3-11-1z" fill="#145c4e"/>
+    </svg>
+    <p class="pregunta-manzana">¿Porcentaje (aproximado) en que la gente prefiere sabor MANZANA?</p>
+    <p class="subtitulo-manzana">Ingresar esta estimación la mayor cantidad de veces durante la jornada.</p>
+    <div class="botones-porcentaje" id="botones-porcentaje"></div>
+    <div class="resultado-manzana">
+      <div class="resultado-item">
+        <svg class="mini-fruta" viewBox="0 0 64 64" fill="none">
+          <path d="M32 22c-9-9-22-6-24 6-2 13 8 27 18 30 3 1 5 1 8 0 10-3 20-17 18-30-2-12-15-15-24-6z" fill="#c0392b"/>
+          <path d="M32 22c0-4 1-8 5-11" stroke="#0d4238" stroke-width="3" stroke-linecap="round"/>
+          <path d="M31 12c4-3 9-2 11 1-3 3-8 3-11-1z" fill="#145c4e"/>
+        </svg>
+        <span class="valor-resultado" id="promedio-manzana">0%</span>
+      </div>
+      <div class="resultado-item">
+        <svg class="mini-fruta" viewBox="0 0 64 64" fill="none">
+          <ellipse cx="32" cy="32" rx="22" ry="17" fill="#e8c022" transform="rotate(-20 32 32)"/>
+          <path d="M12 27c-3-2-6-2-8 0 2 3 5 4 9 3z" fill="#e8c022"/>
+          <path d="M52 37c3 2 6 2 8 0-2-3-5-4-9-3z" fill="#e8c022"/>
+          <path d="M20 20c3-3 7-4 9-2" stroke="#145c4e" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span class="valor-resultado" id="faltante-manzana">100%</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <p id="modal-text">¿Registrar 10%?</p>
+    <div class="modal-botones">
+      <button id="modal-confirmar">Confirmar</button>
+      <button id="modal-cancelar">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= CONFIGURACIÓN ================= */
+const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbwGEIfRKiyotTA_vPf3UZRZT4uM7_uIAOaVVV5AX5o9VBr3kPT_rzUoXMBJ7MkTD35O/exec";
+const REFRESH_MS = 30000;
+
+/* ================= FECHAS ================= */
+const MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+const DIAS = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+
+function hoyKey(){
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function labelDeFecha(key){
+  const [y,m,d] = key.split('-').map(Number);
+  const dateObj = new Date(y, m-1, d);
+  const dia = DIAS[dateObj.getDay()];
+  const diaCap = dia.charAt(0).toUpperCase() + dia.slice(1);
+  return `${diaCap} ${d} de ${MESES[m-1]}`;
+}
+
+const FECHA_HOY = hoyKey();
+let fechaSeleccionada = FECHA_HOY;
+
+/* ================= ESTADO ================= */
+let sumaDinamica = 0;
+let sumaSeguidores = 0;
+let promedioManzana = 0;
+let registrosManzana = 0;
+
+/* ================= TOAST ================= */
+let toastTimer;
+function mostrarToast(msg, esError){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('error', !!esError);
+  t.classList.add('mostrar');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove('mostrar'), 2600);
+}
+
+/* ================= RENDER ================= */
+function render(){
+  document.getElementById('suma-dinamica').textContent = sumaDinamica;
+  document.getElementById('suma-seguidores').textContent = sumaSeguidores;
+  document.getElementById('suma-total').textContent = sumaDinamica + sumaSeguidores;
+  const promedioRedondeado = registrosManzana > 0 ? Math.round(promedioManzana*10)/10 : 0;
+  document.getElementById('promedio-manzana').textContent = promedioRedondeado + '%';
+  document.getElementById('faltante-manzana').textContent = (Math.round((100-promedioRedondeado)*10)/10) + '%';
+}
+
+function bump(id){
+  const el = document.getElementById(id);
+  el.classList.remove('bump');
+  void el.offsetWidth;
+  el.classList.add('bump');
+}
+
+/* ================= SELECTOR DE FECHA ================= */
+const wrapFecha = document.getElementById('selector-fecha-wrap');
+const btnFecha = document.getElementById('selector-fecha-btn');
+const labelFecha = document.getElementById('selector-fecha-label');
+const listaFecha = document.getElementById('selector-fecha-lista');
+
+btnFecha.addEventListener('click', () => {
+  wrapFecha.classList.toggle('abierto');
+});
+document.addEventListener('click', (ev) => {
+  if(!wrapFecha.contains(ev.target)) wrapFecha.classList.remove('abierto');
+});
+
+function pintarListaFechas(fechas){
+  listaFecha.innerHTML = '';
+  fechas.forEach(key => {
+    const opt = document.createElement('div');
+    opt.className = 'opcion-fecha' + (key === fechaSeleccionada ? ' activa' : '');
+    opt.textContent = labelDeFecha(key) + (key === FECHA_HOY ? ' (hoy)' : '');
+    opt.addEventListener('click', () => {
+      fechaSeleccionada = key;
+      wrapFecha.classList.remove('abierto');
+      labelFecha.textContent = labelDeFecha(key) + (key === FECHA_HOY ? ' (hoy)' : '');
+      pintarListaFechas(fechas);
+      cargarDatos(fechaSeleccionada);
+    });
+    listaFecha.appendChild(opt);
+  });
+}
+
+function cargarListaFechas(){
+  const cbName = 'cbf_' + Date.now();
+  window[cbName] = function(data){
+    let fechas = (data && data.fechas) ? data.fechas : [];
+    if(!fechas.includes(FECHA_HOY)) fechas.unshift(FECHA_HOY);
+    fechas.sort((a,b) => b.localeCompare(a));
+    labelFecha.textContent = labelDeFecha(fechaSeleccionada) + (fechaSeleccionada === FECHA_HOY ? ' (hoy)' : '');
+    pintarListaFechas(fechas);
+    delete window[cbName];
+    script.remove();
+  };
+  const script = document.createElement('script');
+  script.src = `${ENDPOINT_URL}?action=getFechas&callback=${cbName}`;
+  script.onerror = function(){
+    delete window[cbName];
+    script.remove();
+    labelFecha.textContent = labelDeFecha(fechaSeleccionada) + (fechaSeleccionada === FECHA_HOY ? ' (hoy)' : '');
+    pintarListaFechas([FECHA_HOY]);
+  };
+  document.body.appendChild(script);
+}
+
+/* ================= LECTURA DE DATOS (JSONP para evitar CORS) ================= */
+function cargarDatos(fecha){
+  const cbName = 'cb_' + Date.now();
+  window[cbName] = function(data){
+    if(data && !data.error){
+      sumaDinamica = data.dinamica || 0;
+      sumaSeguidores = data.seguidores || 0;
+      promedioManzana = data.promedioManzana || 0;
+      registrosManzana = data.totalManzana || 0;
+      render();
+    }
+    delete window[cbName];
+    script.remove();
+  };
+  const script = document.createElement('script');
+  script.src = `${ENDPOINT_URL}?action=getData&fecha=${fecha}&callback=${cbName}`;
+  script.onerror = function(){ delete window[cbName]; script.remove(); };
+  document.body.appendChild(script);
+}
+
+/* ================= ESCRITURA ================= */
+function enviarDato(payload, onOk, onError){
+  fetch(ENDPOINT_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.json())
+  .then(res => {
+    if(res && res.ok){ onOk && onOk(); }
+    else { onError && onError(); }
+  })
+  .catch(() => { onError && onError(); });
+}
+
+/* ================= CIFRAS: DINÁMICA / SEGUIDORES ================= */
+function setupCifra(tipo, inputId, btnId, sumaVarSetter, sumaVarGetter, sumaDisplayId){
+  const input = document.getElementById(inputId);
+  const btn = document.getElementById(btnId);
+
+  input.addEventListener('input', () => {
+    input.value = input.value.replace(/[^0-9]/g,'').slice(0,3);
+  });
+
+  btn.addEventListener('click', () => {
+    const val = parseInt(input.value, 10);
+    if(isNaN(val) || val <= 0 || val > 999){
+      mostrarToast('Ingresa una cifra válida (1 a 999)', true);
+      return;
+    }
+    btn.disabled = true;
+    enviarDato(
+      {action:'submitCifra', fecha: fechaSeleccionada, tipo: tipo, cifra: val},
+      () => {
+        sumaVarSetter(sumaVarGetter() + val);
+        render();
+        bump(sumaDisplayId);
+        input.value = '';
+        btn.disabled = false;
+        mostrarToast(`${tipo}: +${val} registrado`);
+        cargarListaFechas();
+      },
+      () => {
+        btn.disabled = false;
+        mostrarToast('No se pudo registrar. Intenta de nuevo.', true);
+      }
+    );
+  });
+}
+
+setupCifra('Dinámica', 'input-dinamica', 'btn-dinamica',
+  v => sumaDinamica = v, () => sumaDinamica, 'suma-dinamica');
+
+setupCifra('Seguidores', 'input-seguidores', 'btn-seguidores',
+  v => sumaSeguidores = v, () => sumaSeguidores, 'suma-seguidores');
+
+/* ================= MANZANA: BOTONES DE PORCENTAJE ================= */
+const cont = document.getElementById('botones-porcentaje');
+for(let p = 5; p <= 100; p += 5){
+  const b = document.createElement('button');
+  b.className = 'btn-porcentaje' + (p === 100 ? ' top' : '');
+  b.textContent = p + '%';
+  b.addEventListener('click', () => abrirModal(p));
+  cont.appendChild(b);
+}
+
+let porcentajeSeleccionado = null;
+const overlay = document.getElementById('modal-overlay');
+const modalText = document.getElementById('modal-text');
+
+function abrirModal(p){
+  porcentajeSeleccionado = p;
+  modalText.textContent = `¿Registrar ${p}% de preferencia por el sabor manzana?`;
+  overlay.classList.add('activo');
+}
+function cerrarModal(){
+  overlay.classList.remove('activo');
+  porcentajeSeleccionado = null;
+}
+
+document.getElementById('modal-cancelar').addEventListener('click', cerrarModal);
+document.getElementById('modal-confirmar').addEventListener('click', () => {
+  if(porcentajeSeleccionado === null) return;
+  const p = porcentajeSeleccionado;
+  cerrarModal();
+  enviarDato(
+    {action:'submitManzana', fecha: fechaSeleccionada, porcentaje: p},
+    () => {
+      promedioManzana = ((promedioManzana * registrosManzana) + p) / (registrosManzana + 1);
+      registrosManzana += 1;
+      render();
+      bump('promedio-manzana');
+      mostrarToast(`Registrado: ${p}%`);
+      cargarListaFechas();
+    },
+    () => mostrarToast('No se pudo registrar. Intenta de nuevo.', true)
+  );
+});
+
+/* ================= INICIO ================= */
+render();
+cargarListaFechas();
+cargarDatos(fechaSeleccionada);
+setInterval(() => cargarDatos(fechaSeleccionada), REFRESH_MS);
+</script>
+</body>
+</html>
