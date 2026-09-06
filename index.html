@@ -15,6 +15,7 @@
     --teal-dark:#0d4238;
     --red:#c0392b;
     --red-dark:#9e2f22;
+    --gold:#a9781f;
     --text:#1c2b28;
     --text-dim:#6b7b76;
     --border:#e3ded2;
@@ -133,11 +134,16 @@
   }
   #seccion-dinamica h2{color:var(--red);}
   #seccion-seguidores h2{color:var(--teal);}
+  #seccion-sincondicion h2{color:var(--gold);}
 
   .icono{
     width:64px;
     height:64px;
     margin-bottom:8px;
+  }
+
+  .seccion-abajo{
+    margin-top:12px;
   }
 
   .suma-parcial{
@@ -150,6 +156,7 @@
   }
   #seccion-dinamica .suma-parcial{color:var(--red);}
   #seccion-seguidores .suma-parcial{color:var(--teal);}
+  #seccion-sincondicion .suma-parcial{color:var(--gold);}
   .suma-parcial.bump{transform:scale(1.15);}
 
   .cifra-input{
@@ -169,6 +176,7 @@
   }
   .cifra-input:focus{border-color:var(--red);}
   #seccion-seguidores .cifra-input:focus{border-color:var(--teal);}
+  #seccion-sincondicion .cifra-input:focus{border-color:var(--gold);}
 
   .btn-enviar{
     border:none;
@@ -184,6 +192,7 @@
   .btn-enviar:active{transform:scale(0.96);}
   #seccion-dinamica .btn-enviar{background:var(--red);}
   #seccion-seguidores .btn-enviar{background:var(--teal);}
+  #seccion-sincondicion .btn-enviar{background:var(--gold);}
   .btn-enviar:hover{filter:brightness(1.1);}
   .btn-enviar:disabled{opacity:0.5; cursor:not-allowed;}
 
@@ -414,6 +423,19 @@
     </div>
   </div>
 
+  <div class="seccion seccion-abajo" id="seccion-sincondicion">
+    <h2>Sin condición</h2>
+    <svg class="icono" viewBox="0 0 64 64" fill="none">
+      <rect x="10" y="24" width="44" height="26" rx="4" stroke="#a9781f" stroke-width="4"/>
+      <path d="M10 32h44" stroke="#a9781f" stroke-width="4"/>
+      <path d="M32 24v26" stroke="#a9781f" stroke-width="4"/>
+      <path d="M32 24c-4-9-17-9-17 0 7 2 13 2 17 0zM32 24c4-9 17-9 17 0-7 2-13 2-17 0z" stroke="#a9781f" stroke-width="3" stroke-linejoin="round"/>
+    </svg>
+    <div class="suma-parcial" id="suma-sincondicion">0</div>
+    <input class="cifra-input" id="input-sincondicion" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" placeholder="0">
+    <button class="btn-enviar" id="btn-sincondicion">Enviar</button>
+  </div>
+
   <hr class="sep">
 
   <div class="seccion-manzana">
@@ -491,6 +513,7 @@ let fechaSeleccionada = FECHA_HOY;
 /* ================= ESTADO ================= */
 let sumaDinamica = 0;
 let sumaSeguidores = 0;
+let sumaSinCondicion = 0;
 let promedioManzana = 0;
 let registrosManzana = 0;
 
@@ -509,7 +532,8 @@ function mostrarToast(msg, esError){
 function render(){
   document.getElementById('suma-dinamica').textContent = sumaDinamica;
   document.getElementById('suma-seguidores').textContent = sumaSeguidores;
-  document.getElementById('suma-total').textContent = sumaDinamica + sumaSeguidores;
+  document.getElementById('suma-sincondicion').textContent = sumaSinCondicion;
+  document.getElementById('suma-total').textContent = sumaDinamica + sumaSeguidores + sumaSinCondicion;
   const promedioRedondeado = registrosManzana > 0 ? Math.round(promedioManzana*10)/10 : 0;
   document.getElementById('promedio-manzana').textContent = promedioRedondeado + '%';
   document.getElementById('faltante-manzana').textContent = (Math.round((100-promedioRedondeado)*10)/10) + '%';
@@ -581,6 +605,7 @@ function cargarDatos(fecha){
     if(data && !data.error){
       sumaDinamica = data.dinamica || 0;
       sumaSeguidores = data.seguidores || 0;
+      sumaSinCondicion = data.sinCondicion || 0;
       promedioManzana = data.promedioManzana || 0;
       registrosManzana = data.totalManzana || 0;
       render();
@@ -649,6 +674,9 @@ setupCifra('Dinámica', 'input-dinamica', 'btn-dinamica',
 
 setupCifra('Seguidores', 'input-seguidores', 'btn-seguidores',
   v => sumaSeguidores = v, () => sumaSeguidores, 'suma-seguidores');
+
+setupCifra('Sin condición', 'input-sincondicion', 'btn-sincondicion',
+  v => sumaSinCondicion = v, () => sumaSinCondicion, 'suma-sincondicion');
 
 /* ================= MANZANA: BOTONES DE PORCENTAJE ================= */
 const cont = document.getElementById('botones-porcentaje');
