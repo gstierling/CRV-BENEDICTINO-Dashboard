@@ -157,17 +157,38 @@
     margin:0 0 20px;
   }
 
+  .joystick-full-bleed{
+    width:100vw;
+    position:relative;
+    left:50%;
+    right:50%;
+    margin-left:-50vw;
+    margin-right:-50vw;
+    margin-bottom:24px;
+  }
   .joystick-pad{
     position:relative;
-    width:clamp(280px, 84vw, 340px);
+    width:100%;
     aspect-ratio:1/1;
-    margin:0 auto 24px;
-    border-radius:28px;
+    margin:0 auto;
     overflow:hidden;
     background:linear-gradient(to right, var(--red) 50%, var(--amarillo-fondo) 50%);
     box-shadow:inset 0 0 0 2px rgba(0,0,0,0.06);
     touch-action:none;
   }
+  .fruta-fondo{
+    position:absolute;
+    top:50%;
+    font-size:min(30vw, 190px);
+    line-height:1;
+    transform:translate(-50%,-50%);
+    opacity:0.32;
+    z-index:0;
+    pointer-events:none;
+    filter:grayscale(0.05);
+  }
+  .fruta-fondo-izq{left:25%;}
+  .fruta-fondo-der{left:75%;}
   .joystick-svg{
     position:absolute;
     inset:0;
@@ -177,33 +198,35 @@
   }
   .zona{
     position:absolute;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
     transform:translate(-50%,-50%);
-    font-weight:800;
-    font-size:0.85rem;
-    line-height:1.2;
+    font-weight:900;
+    font-size:1.15rem;
+    letter-spacing:0.3px;
+    line-height:1.15;
     pointer-events:none;
-    width:82px;
+    width:auto;
+    max-width:150px;
     z-index:2;
+    color:var(--text);
+    background:rgba(255,255,255,0.92);
+    padding:10px 16px;
+    border-radius:14px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.18);
+    text-align:center;
   }
-  .zona .emoji-fruta{font-size:1.7rem; line-height:1; margin-bottom:2px;}
-  .zona-izq{color:#ffffff; text-shadow:0 1px 4px rgba(0,0,0,0.35);}
-  .zona-der{color:#5c4400; text-shadow:none;}
-  .zona-up-left{top:14%; left:14%;}
-  .zona-left{top:50%; left:7%;}
-  .zona-down-left{top:86%; left:14%;}
-  .zona-up-right{top:14%; left:86%;}
-  .zona-right{top:50%; left:93%;}
-  .zona-down-right{top:86%; left:86%;}
+  .zona-up-left{top:15%; left:16%;}
+  .zona-left{top:50%; left:9%;}
+  .zona-down-left{top:85%; left:16%;}
+  .zona-up-right{top:15%; left:84%;}
+  .zona-right{top:50%; left:91%;}
+  .zona-down-right{top:85%; left:84%;}
 
   .joystick-knob{
     position:absolute;
     top:50%;
     left:50%;
-    width:82px;
-    height:82px;
+    width:66px;
+    height:66px;
     border-radius:50%;
     background:radial-gradient(circle at 35% 30%, #2c7f6c, var(--teal-dark));
     box-shadow:0 6px 18px rgba(0,0,0,0.35);
@@ -219,7 +242,7 @@
     cursor:grabbing;
     box-shadow:0 8px 22px rgba(0,0,0,0.45);
   }
-  .joystick-knob svg{width:44px; height:44px;}
+  .joystick-knob svg{width:36px; height:36px;}
 
   /* ===== Conteos ===== */
   .fila-conteo{
@@ -317,7 +340,11 @@
     <p class="joystick-titulo">Registrar entrega</p>
     <p class="joystick-instruccion">Arrastra el botón central hacia la combinación correspondiente</p>
 
-    <div class="joystick-pad" id="joystick-pad">
+    <div class="joystick-full-bleed">
+      <div class="joystick-pad" id="joystick-pad">
+      <span class="fruta-fondo fruta-fondo-izq">🍎</span>
+      <span class="fruta-fondo fruta-fondo-der">🍋</span>
+
       <svg class="joystick-svg" viewBox="0 0 300 300" preserveAspectRatio="none">
         <line x1="150" y1="150" x2="68.7" y2="68.7" stroke="rgba(255,255,255,0.4)" stroke-width="26" stroke-linecap="round"/>
         <line x1="150" y1="150" x2="35" y2="150" stroke="rgba(255,255,255,0.4)" stroke-width="26" stroke-linecap="round"/>
@@ -327,29 +354,30 @@
         <line x1="150" y1="150" x2="231.3" y2="231.3" stroke="rgba(255,255,255,0.28)" stroke-width="26" stroke-linecap="round"/>
       </svg>
 
-      <div class="zona zona-izq zona-up-left"><span class="emoji-fruta">🍎</span>Dinámica</div>
-      <div class="zona zona-izq zona-left"><span class="emoji-fruta">🍎</span>Sin condición</div>
-      <div class="zona zona-izq zona-down-left"><span class="emoji-fruta">🍎</span>Seguidores</div>
-      <div class="zona zona-der zona-up-right"><span class="emoji-fruta">🍋</span>Dinámica</div>
-      <div class="zona zona-der zona-right"><span class="emoji-fruta">🍋</span>Sin condición</div>
-      <div class="zona zona-der zona-down-right"><span class="emoji-fruta">🍋</span>Seguidores</div>
+      <div class="zona zona-up-left">Dinámica</div>
+      <div class="zona zona-left">Sin condición</div>
+      <div class="zona zona-down-left">Seguidores</div>
+      <div class="zona zona-up-right">Dinámica</div>
+      <div class="zona zona-right">Sin condición</div>
+      <div class="zona zona-down-right">Seguidores</div>
 
       <div class="joystick-knob" id="joystick-knob">
         <svg viewBox="0 0 24 24" fill="none">
-          <line x1="9.88" y1="9.88" x2="4.93" y2="4.93" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
-          <line x1="9" y1="12" x2="2" y2="12" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
-          <line x1="9.88" y1="14.12" x2="4.93" y2="19.07" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
-          <line x1="14.12" y1="9.88" x2="19.07" y2="4.93" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
-          <line x1="15" y1="12" x2="22" y2="12" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
-          <line x1="14.12" y1="14.12" x2="19.07" y2="19.07" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
-          <circle cx="4.93" cy="4.93" r="1.3" fill="#ffffff"/>
-          <circle cx="2" cy="12" r="1.3" fill="#ffffff"/>
-          <circle cx="4.93" cy="19.07" r="1.3" fill="#ffffff"/>
-          <circle cx="19.07" cy="4.93" r="1.3" fill="#ffffff"/>
-          <circle cx="22" cy="12" r="1.3" fill="#ffffff"/>
-          <circle cx="19.07" cy="19.07" r="1.3" fill="#ffffff"/>
-          <circle cx="12" cy="12" r="2.1" fill="#ffffff"/>
+          <line x1="9.88" y1="9.88" x2="4.93" y2="4.93" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
+          <line x1="9" y1="12" x2="2" y2="12" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
+          <line x1="9.88" y1="14.12" x2="4.93" y2="19.07" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
+          <line x1="14.12" y1="9.88" x2="19.07" y2="4.93" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
+          <line x1="15" y1="12" x2="22" y2="12" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
+          <line x1="14.12" y1="14.12" x2="19.07" y2="19.07" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
+          <circle cx="4.93" cy="4.93" r="1.7" fill="#ffffff"/>
+          <circle cx="2" cy="12" r="1.7" fill="#ffffff"/>
+          <circle cx="4.93" cy="19.07" r="1.7" fill="#ffffff"/>
+          <circle cx="19.07" cy="4.93" r="1.7" fill="#ffffff"/>
+          <circle cx="22" cy="12" r="1.7" fill="#ffffff"/>
+          <circle cx="19.07" cy="19.07" r="1.7" fill="#ffffff"/>
+          <circle cx="12" cy="12" r="2.6" fill="#ffffff"/>
         </svg>
+      </div>
       </div>
     </div>
 
@@ -537,7 +565,6 @@ function enviarDato(payload, onOk, onError){
 /* ================= JOYSTICK ================= */
 const pad = document.getElementById('joystick-pad');
 const knob = document.getElementById('joystick-knob');
-const ARRASTRE_MINIMO = 34;
 
 const DIRECCIONES = [
   { dx:-0.7071, dy:-0.7071, fruta:'Manzana', categoria:'Dinámica' },
@@ -558,11 +585,12 @@ function centrarKnob(){
 
 knob.addEventListener('pointerdown', (ev) => {
   arrastrando = true;
+  knob.style.transition = 'none';
   knob.setPointerCapture(ev.pointerId);
   const rect = pad.getBoundingClientRect();
   centroX = rect.left + rect.width/2;
   centroY = rect.top + rect.height/2;
-  padRadio = Math.min(rect.width, rect.height)/2 - 46;
+  padRadio = Math.min(rect.width, rect.height)/2 - 40;
   knob.classList.add('activo');
 });
 
@@ -585,9 +613,12 @@ function soltarKnob(ev){
   const dx = ev.clientX - centroX;
   const dy = ev.clientY - centroY;
   const dist = Math.sqrt(dx*dx + dy*dy);
+
+  knob.style.transition = 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)';
   centrarKnob();
 
-  if(dist < ARRASTRE_MINIMO) return;
+  const umbral = padRadio * 0.67;
+  if(dist < umbral) return;
 
   const ndx = dx/dist, ndy = dy/dist;
   let mejor = null, mejorProd = -Infinity;
@@ -602,6 +633,7 @@ knob.addEventListener('pointerup', soltarKnob);
 knob.addEventListener('pointercancel', () => {
   arrastrando = false;
   knob.classList.remove('activo');
+  knob.style.transition = 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)';
   centrarKnob();
 });
 
