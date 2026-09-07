@@ -31,6 +31,7 @@
     display:flex;
     justify-content:center;
     padding:16px 14px 36px;
+    overflow-x:hidden;
   }
   .app-container{
     width:100%;
@@ -112,28 +113,59 @@
   .opcion-fecha.activa{color:var(--teal); font-weight:800;}
 
   /* ===== Botellas entregadas ===== */
-  .suma-total{
-    text-align:center;
-    margin:4px 0 14px;
-    font-size:2.025rem;
-    color:var(--text-dim);
-    font-weight:800;
+  .bloque-botellas{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:16px;
+    margin:6px 0 20px;
+    flex-wrap:wrap;
   }
-  .hasta-ahora{
-    display:block;
+  .botellas-fila{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  .botellas-label{
+    font-size:clamp(1.05rem, 4vw, 1.3rem);
+    font-weight:800;
+    color:var(--text-dim);
+  }
+  .botellas-num-wrap{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .botellas-num{
+    font-size:clamp(2.6rem, 11vw, 3.6rem);
+    font-weight:900;
+    color:var(--teal-dark);
+    line-height:1;
+  }
+  .botellas-pct{
     font-size:0.85rem;
-    font-weight:600;
+    font-weight:700;
     color:var(--text-dim);
     margin-top:2px;
   }
-  .suma-total span#suma-total{
-    display:block;
-    font-size:5.2rem;
-    font-weight:900;
-    color:var(--teal-dark);
-    margin-top:0;
-    line-height:1;
+  .botellas-fruta-box{
+    display:flex;
+    flex-direction:column;
+    border-radius:12px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    min-width:64px;
   }
+  .fruta-box-item{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:9px 14px;
+    font-weight:900;
+    font-size:1.35rem;
+  }
+  .fruta-box-manzana{background:var(--red); color:#ffffff;}
+  .fruta-box-limon{background:var(--amarillo-fondo); color:#5c4400;}
 
   /* ===== Joystick ===== */
   .seccion-joystick{
@@ -144,18 +176,6 @@
     text-align:center;
     box-shadow:0 2px 10px rgba(20,92,78,0.06);
   }
-  .joystick-titulo{
-    font-weight:900;
-    font-size:1.3rem;
-    margin:0 0 4px;
-    color:var(--text);
-  }
-  .joystick-instruccion{
-    font-weight:600;
-    font-size:0.9rem;
-    color:var(--text-dim);
-    margin:0 0 20px;
-  }
 
   .joystick-full-bleed{
     width:100vw;
@@ -164,14 +184,14 @@
     right:50%;
     margin-left:-50vw;
     margin-right:-50vw;
-    margin-bottom:24px;
+    margin-bottom:22px;
   }
   .joystick-pad{
     position:relative;
     width:100%;
     aspect-ratio:1/1;
     margin:0 auto;
-    overflow:hidden;
+    overflow:visible;
     background:linear-gradient(to right, var(--red) 50%, var(--amarillo-fondo) 50%);
     box-shadow:inset 0 0 0 2px rgba(0,0,0,0.06);
     touch-action:none;
@@ -179,13 +199,12 @@
   .fruta-fondo{
     position:absolute;
     top:50%;
-    font-size:min(30vw, 190px);
+    font-size:min(38vw, 190px);
     line-height:1;
     transform:translate(-50%,-50%);
-    opacity:0.32;
+    opacity:0.42;
     z-index:0;
     pointer-events:none;
-    filter:grayscale(0.05);
   }
   .fruta-fondo-izq{left:25%;}
   .fruta-fondo-der{left:75%;}
@@ -200,25 +219,25 @@
     position:absolute;
     transform:translate(-50%,-50%);
     font-weight:900;
-    font-size:1.15rem;
-    letter-spacing:0.3px;
+    font-size:0.92rem;
+    letter-spacing:0.2px;
     line-height:1.15;
     pointer-events:none;
     width:auto;
-    max-width:150px;
+    max-width:100px;
     z-index:2;
     color:var(--text);
     background:rgba(255,255,255,0.92);
-    padding:10px 16px;
-    border-radius:14px;
+    padding:8px 10px;
+    border-radius:12px;
     box-shadow:0 3px 10px rgba(0,0,0,0.18);
     text-align:center;
   }
   .zona-up-left{top:15%; left:16%;}
-  .zona-left{top:50%; left:9%;}
+  .zona-left{top:50%; left:14%;}
   .zona-down-left{top:85%; left:16%;}
   .zona-up-right{top:15%; left:84%;}
-  .zona-right{top:50%; left:91%;}
+  .zona-right{top:50%; left:86%;}
   .zona-down-right{top:85%; left:84%;}
 
   .joystick-knob{
@@ -242,53 +261,89 @@
     cursor:grabbing;
     box-shadow:0 8px 22px rgba(0,0,0,0.45);
   }
-  .joystick-knob svg{width:36px; height:36px;}
+  .joystick-knob svg{width:38px; height:38px;}
 
-  /* ===== Conteos ===== */
-  .fila-conteo{
-    display:flex;
-    justify-content:center;
-    gap:28px;
-    margin-bottom:16px;
-    flex-wrap:wrap;
+  /* ===== Barras Manzana / Limón ===== */
+  .barras-fruta{
+    max-width:420px;
+    margin:0 auto 20px;
   }
-  .fila-conteo:last-child{margin-bottom:0;}
-  .conteo-item{
+  .barra-fila{
     display:flex;
-    flex-direction:column;
     align-items:center;
-    min-width:64px;
+    gap:10px;
+    margin-bottom:12px;
   }
-  .conteo-emoji{font-size:1.7rem; line-height:1; margin-bottom:2px;}
-  .conteo-dot{
-    width:14px; height:14px; border-radius:50%;
-    margin-bottom:6px;
+  .barra-fila:last-child{margin-bottom:0;}
+  .barra-etiqueta{
+    width:88px;
+    text-align:left;
+    font-weight:800;
+    font-size:0.95rem;
+    flex-shrink:0;
   }
-  .conteo-valor{
-    font-size:2rem;
+  .barra-track{
+    flex:1;
+    height:20px;
+    background:var(--panel-2);
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid var(--border);
+  }
+  .barra-fill{
+    height:100%;
+    width:0%;
+    border-radius:10px;
+    transition:width 0.4s ease;
+  }
+  .barra-fill-manzana{background:var(--red);}
+  .barra-fill-limon{background:var(--amarillo-fondo);}
+  .barra-valor{
+    width:32px;
+    text-align:right;
     font-weight:900;
-    line-height:1;
+    font-size:1.1rem;
+    flex-shrink:0;
   }
-  .conteo-etiqueta{
-    font-size:0.8rem;
-    font-weight:700;
-    color:var(--text-dim);
-    margin-top:2px;
-  }
-  #conteo-manzana{color:var(--red);}
-  #conteo-limon{color:var(--limon);}
-  #conteo-dinamica{color:var(--red);}
-  #conteo-seguidores{color:var(--teal);}
-  #conteo-sincondicion{color:var(--gold);}
-  .dot-dinamica{background:var(--red);}
-  .dot-seguidores{background:var(--teal);}
-  .dot-sincondicion{background:var(--gold);}
 
   hr.sep{
     border:none;
     border-top:1px solid var(--border);
     margin:18px 0;
   }
+
+  /* ===== Conteos por categoría ===== */
+  .fila-conteo-cat{
+    display:flex;
+    justify-content:center;
+    gap:24px;
+    flex-wrap:wrap;
+  }
+  .conteo-item-cat{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-width:80px;
+  }
+  .icono-cat{
+    width:46px;
+    height:46px;
+    margin-bottom:6px;
+  }
+  .conteo-valor-cat{
+    font-size:2.3rem;
+    font-weight:900;
+    line-height:1;
+  }
+  .conteo-etiqueta-cat{
+    font-size:0.95rem;
+    font-weight:800;
+    color:var(--text-dim);
+    margin-top:4px;
+  }
+  #conteo-dinamica{color:var(--red);}
+  #conteo-seguidores{color:var(--teal);}
+  #conteo-sincondicion{color:var(--gold);}
 
   .toast{
     position:fixed;
@@ -330,87 +385,103 @@
     <div class="selector-fecha-lista" id="selector-fecha-lista"></div>
   </div>
 
-  <div class="suma-total">
-    Botellas entregadas
-    <span class="hasta-ahora">(Hasta ahora)</span>
-    <span id="suma-total">0</span>
+  <div class="bloque-botellas">
+    <div class="botellas-fila">
+      <span class="botellas-label">Botellas entregadas</span>
+      <div class="botellas-num-wrap">
+        <span class="botellas-num" id="suma-total">0</span>
+        <span class="botellas-pct" id="botellas-pct">(0%)</span>
+      </div>
+    </div>
+    <div class="botellas-fruta-box">
+      <div class="fruta-box-item fruta-box-manzana" id="mini-manzana">0</div>
+      <div class="fruta-box-item fruta-box-limon" id="mini-limon">0</div>
+    </div>
   </div>
 
   <div class="seccion-joystick">
-    <p class="joystick-titulo">Registrar entrega</p>
-    <p class="joystick-instruccion">Arrastra el botón central hacia la combinación correspondiente</p>
-
     <div class="joystick-full-bleed">
       <div class="joystick-pad" id="joystick-pad">
-      <span class="fruta-fondo fruta-fondo-izq">🍎</span>
-      <span class="fruta-fondo fruta-fondo-der">🍋</span>
+        <span class="fruta-fondo fruta-fondo-izq">🍎</span>
+        <span class="fruta-fondo fruta-fondo-der">🍋</span>
 
-      <svg class="joystick-svg" viewBox="0 0 300 300" preserveAspectRatio="none">
-        <line x1="150" y1="150" x2="68.7" y2="68.7" stroke="rgba(255,255,255,0.4)" stroke-width="26" stroke-linecap="round"/>
-        <line x1="150" y1="150" x2="35" y2="150" stroke="rgba(255,255,255,0.4)" stroke-width="26" stroke-linecap="round"/>
-        <line x1="150" y1="150" x2="68.7" y2="231.3" stroke="rgba(255,255,255,0.4)" stroke-width="26" stroke-linecap="round"/>
-        <line x1="150" y1="150" x2="231.3" y2="68.7" stroke="rgba(255,255,255,0.28)" stroke-width="26" stroke-linecap="round"/>
-        <line x1="150" y1="150" x2="265" y2="150" stroke="rgba(255,255,255,0.28)" stroke-width="26" stroke-linecap="round"/>
-        <line x1="150" y1="150" x2="231.3" y2="231.3" stroke="rgba(255,255,255,0.28)" stroke-width="26" stroke-linecap="round"/>
-      </svg>
-
-      <div class="zona zona-up-left">Dinámica</div>
-      <div class="zona zona-left">Sin condición</div>
-      <div class="zona zona-down-left">Seguidores</div>
-      <div class="zona zona-up-right">Dinámica</div>
-      <div class="zona zona-right">Sin condición</div>
-      <div class="zona zona-down-right">Seguidores</div>
-
-      <div class="joystick-knob" id="joystick-knob">
-        <svg viewBox="0 0 24 24" fill="none">
-          <line x1="9.88" y1="9.88" x2="4.93" y2="4.93" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
-          <line x1="9" y1="12" x2="2" y2="12" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
-          <line x1="9.88" y1="14.12" x2="4.93" y2="19.07" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
-          <line x1="14.12" y1="9.88" x2="19.07" y2="4.93" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
-          <line x1="15" y1="12" x2="22" y2="12" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
-          <line x1="14.12" y1="14.12" x2="19.07" y2="19.07" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
-          <circle cx="4.93" cy="4.93" r="1.7" fill="#ffffff"/>
-          <circle cx="2" cy="12" r="1.7" fill="#ffffff"/>
-          <circle cx="4.93" cy="19.07" r="1.7" fill="#ffffff"/>
-          <circle cx="19.07" cy="4.93" r="1.7" fill="#ffffff"/>
-          <circle cx="22" cy="12" r="1.7" fill="#ffffff"/>
-          <circle cx="19.07" cy="19.07" r="1.7" fill="#ffffff"/>
-          <circle cx="12" cy="12" r="2.6" fill="#ffffff"/>
+        <svg class="joystick-svg" viewBox="0 0 300 300" preserveAspectRatio="none">
+          <line x1="150" y1="150" x2="68.7" y2="68.7" stroke="rgba(255,255,255,0.4)" stroke-width="26" stroke-linecap="round"/>
+          <line x1="150" y1="150" x2="35" y2="150" stroke="rgba(255,255,255,0.4)" stroke-width="26" stroke-linecap="round"/>
+          <line x1="150" y1="150" x2="68.7" y2="231.3" stroke="rgba(255,255,255,0.4)" stroke-width="26" stroke-linecap="round"/>
+          <line x1="150" y1="150" x2="231.3" y2="68.7" stroke="rgba(255,255,255,0.28)" stroke-width="26" stroke-linecap="round"/>
+          <line x1="150" y1="150" x2="265" y2="150" stroke="rgba(255,255,255,0.28)" stroke-width="26" stroke-linecap="round"/>
+          <line x1="150" y1="150" x2="231.3" y2="231.3" stroke="rgba(255,255,255,0.28)" stroke-width="26" stroke-linecap="round"/>
         </svg>
-      </div>
+
+        <div class="zona zona-up-left">Dinámica</div>
+        <div class="zona zona-left">Sin condición</div>
+        <div class="zona zona-down-left">Seguidores</div>
+        <div class="zona zona-up-right">Dinámica</div>
+        <div class="zona zona-right">Sin condición</div>
+        <div class="zona zona-down-right">Seguidores</div>
+
+        <div class="joystick-knob" id="joystick-knob">
+          <svg viewBox="0 0 24 24" fill="none">
+            <line x1="9.88" y1="9.88" x2="4.93" y2="4.93" stroke="#ffffff" stroke-width="4.6" stroke-linecap="round"/>
+            <line x1="9" y1="12" x2="2" y2="12" stroke="#ffffff" stroke-width="4.6" stroke-linecap="round"/>
+            <line x1="9.88" y1="14.12" x2="4.93" y2="19.07" stroke="#ffffff" stroke-width="4.6" stroke-linecap="round"/>
+            <line x1="14.12" y1="9.88" x2="19.07" y2="4.93" stroke="#ffffff" stroke-width="4.6" stroke-linecap="round"/>
+            <line x1="15" y1="12" x2="22" y2="12" stroke="#ffffff" stroke-width="4.6" stroke-linecap="round"/>
+            <line x1="14.12" y1="14.12" x2="19.07" y2="19.07" stroke="#ffffff" stroke-width="4.6" stroke-linecap="round"/>
+            <circle cx="12" cy="12" r="2.6" fill="#ffffff"/>
+          </svg>
+        </div>
       </div>
     </div>
 
-    <div class="fila-conteo">
-      <div class="conteo-item">
-        <span class="conteo-emoji">🍎</span>
-        <span class="conteo-valor" id="conteo-manzana">0</span>
-        <span class="conteo-etiqueta">Manzana</span>
+    <div class="barras-fruta">
+      <div class="barra-fila">
+        <span class="barra-etiqueta">🍎 Manzana</span>
+        <div class="barra-track"><div class="barra-fill barra-fill-manzana" id="barra-manzana"></div></div>
+        <span class="barra-valor" id="conteo-manzana">0</span>
       </div>
-      <div class="conteo-item">
-        <span class="conteo-emoji">🍋</span>
-        <span class="conteo-valor" id="conteo-limon">0</span>
-        <span class="conteo-etiqueta">Limón</span>
+      <div class="barra-fila">
+        <span class="barra-etiqueta">🍋 Limón</span>
+        <div class="barra-track"><div class="barra-fill barra-fill-limon" id="barra-limon"></div></div>
+        <span class="barra-valor" id="conteo-limon">0</span>
       </div>
     </div>
 
     <hr class="sep">
 
-    <div class="fila-conteo">
-      <div class="conteo-item">
-        <span class="conteo-dot dot-dinamica"></span>
-        <span class="conteo-valor" id="conteo-dinamica">0</span>
-        <span class="conteo-etiqueta">Dinámica</span>
+    <div class="fila-conteo-cat">
+      <div class="conteo-item-cat">
+        <svg class="icono-cat" viewBox="0 0 64 64" fill="none">
+          <rect x="8" y="8" width="48" height="48" rx="10" stroke="#c0392b" stroke-width="4"/>
+          <circle cx="21" cy="21" r="4.5" fill="#c0392b"/>
+          <circle cx="43" cy="21" r="4.5" fill="#c0392b"/>
+          <circle cx="21" cy="43" r="4.5" fill="#c0392b"/>
+          <circle cx="43" cy="43" r="4.5" fill="#c0392b"/>
+          <circle cx="32" cy="32" r="4.5" fill="#c0392b"/>
+        </svg>
+        <span class="conteo-valor-cat" id="conteo-dinamica">0</span>
+        <span class="conteo-etiqueta-cat">Dinámica</span>
       </div>
-      <div class="conteo-item">
-        <span class="conteo-dot dot-seguidores"></span>
-        <span class="conteo-valor" id="conteo-seguidores">0</span>
-        <span class="conteo-etiqueta">Seguidores</span>
+      <div class="conteo-item-cat">
+        <svg class="icono-cat" viewBox="0 0 64 64" fill="none">
+          <circle cx="24" cy="22" r="9" stroke="#145c4e" stroke-width="4"/>
+          <path d="M8 54c2-12 9-18 16-18s14 6 16 18" stroke="#145c4e" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="44" cy="26" r="9" stroke="#145c4e" stroke-width="4" opacity="0.5"/>
+          <path d="M30 54c2-11 8-16 14-16s12 5 14 16" stroke="#145c4e" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+        <span class="conteo-valor-cat" id="conteo-seguidores">0</span>
+        <span class="conteo-etiqueta-cat">Seguidores</span>
       </div>
-      <div class="conteo-item">
-        <span class="conteo-dot dot-sincondicion"></span>
-        <span class="conteo-valor" id="conteo-sincondicion">0</span>
-        <span class="conteo-etiqueta">Sin condición</span>
+      <div class="conteo-item-cat">
+        <svg class="icono-cat" viewBox="0 0 64 64" fill="none">
+          <rect x="10" y="24" width="44" height="26" rx="4" stroke="#a9781f" stroke-width="4"/>
+          <path d="M10 32h44" stroke="#a9781f" stroke-width="4"/>
+          <path d="M32 24v26" stroke="#a9781f" stroke-width="4"/>
+          <path d="M32 24c-4-9-17-9-17 0 7 2 13 2 17 0zM32 24c4-9 17-9 17 0-7 2-13 2-17 0z" stroke="#a9781f" stroke-width="3" stroke-linejoin="round"/>
+        </svg>
+        <span class="conteo-valor-cat" id="conteo-sincondicion">0</span>
+        <span class="conteo-etiqueta-cat">Sin condición</span>
       </div>
     </div>
   </div>
@@ -422,6 +493,7 @@
 /* ================= CONFIGURACIÓN ================= */
 const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbwGEIfRKiyotTA_vPf3UZRZT4uM7_uIAOaVVV5AX5o9VBr3kPT_rzUoXMBJ7MkTD35O/exec";
 const REFRESH_MS = 30000;
+const TOTAL_BOTELLAS = 1160;
 
 /* ================= FECHAS ================= */
 const MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
@@ -466,12 +538,23 @@ function mostrarToast(msg, esError){
 
 /* ================= RENDER ================= */
 function render(){
+  const total = cuentaDinamica + cuentaSeguidores + cuentaSinCondicion;
+  document.getElementById('suma-total').textContent = total;
+  const pct = Math.round((total / TOTAL_BOTELLAS) * 100);
+  document.getElementById('botellas-pct').textContent = `(${pct}%)`;
+
+  document.getElementById('mini-manzana').textContent = cuentaManzana;
+  document.getElementById('mini-limon').textContent = cuentaLimon;
+
   document.getElementById('conteo-manzana').textContent = cuentaManzana;
   document.getElementById('conteo-limon').textContent = cuentaLimon;
+  const maxFruta = Math.max(cuentaManzana, cuentaLimon, 1);
+  document.getElementById('barra-manzana').style.width = (cuentaManzana/maxFruta*100) + '%';
+  document.getElementById('barra-limon').style.width = (cuentaLimon/maxFruta*100) + '%';
+
   document.getElementById('conteo-dinamica').textContent = cuentaDinamica;
   document.getElementById('conteo-seguidores').textContent = cuentaSeguidores;
   document.getElementById('conteo-sincondicion').textContent = cuentaSinCondicion;
-  document.getElementById('suma-total').textContent = cuentaDinamica + cuentaSeguidores + cuentaSinCondicion;
 }
 
 /* ================= SELECTOR DE FECHA ================= */
