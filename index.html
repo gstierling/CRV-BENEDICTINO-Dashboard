@@ -17,6 +17,7 @@
     --red-dark:#9e2f22;
     --gold:#a9781f;
     --limon:#c9a30a;
+    --amarillo-fondo:#f2c230;
     --text:#1c2b28;
     --text-dim:#6b7b76;
     --border:#e3ded2;
@@ -153,18 +154,26 @@
     font-weight:600;
     font-size:0.9rem;
     color:var(--text-dim);
-    margin:0 0 18px;
+    margin:0 0 20px;
   }
 
   .joystick-pad{
     position:relative;
-    width:260px;
-    height:260px;
-    margin:0 auto 22px;
-    background:var(--panel-2);
-    border:2px solid var(--border);
-    border-radius:50%;
+    width:clamp(280px, 84vw, 340px);
+    aspect-ratio:1/1;
+    margin:0 auto 24px;
+    border-radius:28px;
+    overflow:hidden;
+    background:linear-gradient(to right, var(--red) 50%, var(--amarillo-fondo) 50%);
+    box-shadow:inset 0 0 0 2px rgba(0,0,0,0.06);
     touch-action:none;
+  }
+  .joystick-svg{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:1;
   }
   .zona{
     position:absolute;
@@ -173,41 +182,44 @@
     align-items:center;
     transform:translate(-50%,-50%);
     font-weight:800;
-    font-size:0.78rem;
-    color:var(--text-dim);
-    line-height:1.15;
+    font-size:0.85rem;
+    line-height:1.2;
     pointer-events:none;
-    width:78px;
+    width:82px;
+    z-index:2;
   }
-  .zona .emoji-fruta{font-size:1.4rem; line-height:1;}
-  .zona-up-left{top:20%; left:20%;}
-  .zona-left{top:50%; left:6%;}
-  .zona-down-left{top:80%; left:20%;}
-  .zona-up-right{top:20%; left:80%;}
-  .zona-right{top:50%; left:94%;}
-  .zona-down-right{top:80%; left:80%;}
+  .zona .emoji-fruta{font-size:1.7rem; line-height:1; margin-bottom:2px;}
+  .zona-izq{color:#ffffff; text-shadow:0 1px 4px rgba(0,0,0,0.35);}
+  .zona-der{color:#5c4400; text-shadow:none;}
+  .zona-up-left{top:14%; left:14%;}
+  .zona-left{top:50%; left:7%;}
+  .zona-down-left{top:86%; left:14%;}
+  .zona-up-right{top:14%; left:86%;}
+  .zona-right{top:50%; left:93%;}
+  .zona-down-right{top:86%; left:86%;}
 
   .joystick-knob{
     position:absolute;
     top:50%;
     left:50%;
-    width:60px;
-    height:60px;
+    width:82px;
+    height:82px;
     border-radius:50%;
-    background:linear-gradient(135deg, var(--teal), var(--red));
-    box-shadow:0 4px 14px rgba(20,92,78,0.35);
+    background:radial-gradient(circle at 35% 30%, #2c7f6c, var(--teal-dark));
+    box-shadow:0 6px 18px rgba(0,0,0,0.35);
     cursor:grab;
     display:flex;
     align-items:center;
     justify-content:center;
     touch-action:none;
     transition:box-shadow 0.15s ease;
+    z-index:3;
   }
   .joystick-knob.activo{
     cursor:grabbing;
-    box-shadow:0 6px 20px rgba(20,92,78,0.5);
+    box-shadow:0 8px 22px rgba(0,0,0,0.45);
   }
-  .joystick-knob svg{width:26px; height:26px;}
+  .joystick-knob svg{width:44px; height:44px;}
 
   /* ===== Conteos ===== */
   .fila-conteo{
@@ -240,8 +252,8 @@
     color:var(--text-dim);
     margin-top:2px;
   }
-  #conteo-manzana, .dot-manzana{color:var(--red); background:var(--red);}
-  #conteo-limon, .dot-limon{color:var(--limon); background:var(--limon);}
+  #conteo-manzana{color:var(--red);}
+  #conteo-limon{color:var(--limon);}
   #conteo-dinamica{color:var(--red);}
   #conteo-seguidores{color:var(--teal);}
   #conteo-sincondicion{color:var(--gold);}
@@ -254,51 +266,6 @@
     border-top:1px solid var(--border);
     margin:18px 0;
   }
-
-  /* ===== Modal ===== */
-  .modal-overlay{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(20,30,28,0.55);
-    align-items:center;
-    justify-content:center;
-    z-index:50;
-    padding:20px;
-  }
-  .modal-overlay.activo{display:flex;}
-  .modal{
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:16px;
-    padding:26px 24px;
-    max-width:320px;
-    width:100%;
-    text-align:center;
-  }
-  .modal p{
-    font-weight:700;
-    font-size:1.1rem;
-    margin:0 0 20px;
-    color:var(--text);
-  }
-  .modal-botones{
-    display:flex;
-    gap:10px;
-    justify-content:center;
-  }
-  .modal-botones button{
-    flex:1;
-    border:none;
-    border-radius:10px;
-    padding:12px 0;
-    font-family:'Nunito',sans-serif;
-    font-weight:800;
-    font-size:0.95rem;
-    cursor:pointer;
-  }
-  #modal-confirmar{background:var(--teal); color:#ffffff;}
-  #modal-cancelar{background:var(--panel-2); color:var(--text); border:1px solid var(--border) !important;}
 
   .toast{
     position:fixed;
@@ -316,17 +283,14 @@
     z-index:60;
     pointer-events:none;
     box-shadow:0 6px 18px rgba(20,92,78,0.15);
+    max-width:88vw;
+    text-align:center;
   }
   .toast.mostrar{
     opacity:1;
     transform:translateX(-50%) translateY(0);
   }
   .toast.error{border-color:var(--red); color:var(--red);}
-
-  @media (max-width:380px){
-    .joystick-pad{width:230px; height:230px;}
-    .zona{width:64px; font-size:0.7rem;}
-  }
 </style>
 </head>
 <body>
@@ -351,19 +315,40 @@
 
   <div class="seccion-joystick">
     <p class="joystick-titulo">Registrar entrega</p>
-    <p class="joystick-instruccion">Arrastra el botón hacia la combinación correspondiente</p>
+    <p class="joystick-instruccion">Arrastra el botón central hacia la combinación correspondiente</p>
 
     <div class="joystick-pad" id="joystick-pad">
-      <div class="zona zona-up-left"><span class="emoji-fruta">🍎</span>Dinámica</div>
-      <div class="zona zona-left"><span class="emoji-fruta">🍎</span>Sin condición</div>
-      <div class="zona zona-down-left"><span class="emoji-fruta">🍎</span>Seguidores</div>
-      <div class="zona zona-up-right"><span class="emoji-fruta">🍋</span>Dinámica</div>
-      <div class="zona zona-right"><span class="emoji-fruta">🍋</span>Sin condición</div>
-      <div class="zona zona-down-right"><span class="emoji-fruta">🍋</span>Seguidores</div>
+      <svg class="joystick-svg" viewBox="0 0 300 300" preserveAspectRatio="none">
+        <line x1="150" y1="150" x2="68.7" y2="68.7" stroke="rgba(255,255,255,0.4)" stroke-width="26" stroke-linecap="round"/>
+        <line x1="150" y1="150" x2="35" y2="150" stroke="rgba(255,255,255,0.4)" stroke-width="26" stroke-linecap="round"/>
+        <line x1="150" y1="150" x2="68.7" y2="231.3" stroke="rgba(255,255,255,0.4)" stroke-width="26" stroke-linecap="round"/>
+        <line x1="150" y1="150" x2="231.3" y2="68.7" stroke="rgba(255,255,255,0.28)" stroke-width="26" stroke-linecap="round"/>
+        <line x1="150" y1="150" x2="265" y2="150" stroke="rgba(255,255,255,0.28)" stroke-width="26" stroke-linecap="round"/>
+        <line x1="150" y1="150" x2="231.3" y2="231.3" stroke="rgba(255,255,255,0.28)" stroke-width="26" stroke-linecap="round"/>
+      </svg>
+
+      <div class="zona zona-izq zona-up-left"><span class="emoji-fruta">🍎</span>Dinámica</div>
+      <div class="zona zona-izq zona-left"><span class="emoji-fruta">🍎</span>Sin condición</div>
+      <div class="zona zona-izq zona-down-left"><span class="emoji-fruta">🍎</span>Seguidores</div>
+      <div class="zona zona-der zona-up-right"><span class="emoji-fruta">🍋</span>Dinámica</div>
+      <div class="zona zona-der zona-right"><span class="emoji-fruta">🍋</span>Sin condición</div>
+      <div class="zona zona-der zona-down-right"><span class="emoji-fruta">🍋</span>Seguidores</div>
 
       <div class="joystick-knob" id="joystick-knob">
         <svg viewBox="0 0 24 24" fill="none">
-          <path d="M12 3v18M3 12h18" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+          <line x1="9.88" y1="9.88" x2="4.93" y2="4.93" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="9" y1="12" x2="2" y2="12" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="9.88" y1="14.12" x2="4.93" y2="19.07" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="14.12" y1="9.88" x2="19.07" y2="4.93" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="15" y1="12" x2="22" y2="12" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="14.12" y1="14.12" x2="19.07" y2="19.07" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="4.93" cy="4.93" r="1.3" fill="#ffffff"/>
+          <circle cx="2" cy="12" r="1.3" fill="#ffffff"/>
+          <circle cx="4.93" cy="19.07" r="1.3" fill="#ffffff"/>
+          <circle cx="19.07" cy="4.93" r="1.3" fill="#ffffff"/>
+          <circle cx="22" cy="12" r="1.3" fill="#ffffff"/>
+          <circle cx="19.07" cy="19.07" r="1.3" fill="#ffffff"/>
+          <circle cx="12" cy="12" r="2.1" fill="#ffffff"/>
         </svg>
       </div>
     </div>
@@ -399,16 +384,6 @@
         <span class="conteo-valor" id="conteo-sincondicion">0</span>
         <span class="conteo-etiqueta">Sin condición</span>
       </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modal-overlay">
-  <div class="modal">
-    <p id="modal-text">¿Registrar Manzana + Dinámica?</p>
-    <div class="modal-botones">
-      <button id="modal-confirmar">Confirmar</button>
-      <button id="modal-cancelar">Cancelar</button>
     </div>
   </div>
 </div>
@@ -458,7 +433,7 @@ function mostrarToast(msg, esError){
   t.classList.toggle('error', !!esError);
   t.classList.add('mostrar');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=> t.classList.remove('mostrar'), 2600);
+  toastTimer = setTimeout(()=> t.classList.remove('mostrar'), 3200);
 }
 
 /* ================= RENDER ================= */
@@ -554,15 +529,14 @@ function enviarDato(payload, onOk, onError){
   .then(r => r.json())
   .then(res => {
     if(res && res.ok){ onOk && onOk(); }
-    else { onError && onError(); }
+    else { onError && onError(res && res.error); }
   })
-  .catch(() => { onError && onError(); });
+  .catch((err) => { onError && onError(err && err.message); });
 }
 
 /* ================= JOYSTICK ================= */
 const pad = document.getElementById('joystick-pad');
 const knob = document.getElementById('joystick-knob');
-const PAD_RADIO = 92;
 const ARRASTRE_MINIMO = 34;
 
 const DIRECCIONES = [
@@ -576,6 +550,7 @@ const DIRECCIONES = [
 
 let arrastrando = false;
 let centroX = 0, centroY = 0;
+let padRadio = 100;
 
 function centrarKnob(){
   knob.style.transform = 'translate(-50%, -50%)';
@@ -587,6 +562,7 @@ knob.addEventListener('pointerdown', (ev) => {
   const rect = pad.getBoundingClientRect();
   centroX = rect.left + rect.width/2;
   centroY = rect.top + rect.height/2;
+  padRadio = Math.min(rect.width, rect.height)/2 - 46;
   knob.classList.add('activo');
 });
 
@@ -595,9 +571,9 @@ knob.addEventListener('pointermove', (ev) => {
   let dx = ev.clientX - centroX;
   let dy = ev.clientY - centroY;
   const dist = Math.sqrt(dx*dx + dy*dy);
-  if(dist > PAD_RADIO){
-    dx = dx / dist * PAD_RADIO;
-    dy = dy / dist * PAD_RADIO;
+  if(dist > padRadio){
+    dx = dx / dist * padRadio;
+    dy = dy / dist * padRadio;
   }
   knob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
 });
@@ -619,7 +595,7 @@ function soltarKnob(ev){
     const prod = d.dx*ndx + d.dy*ndy;
     if(prod > mejorProd){ mejorProd = prod; mejor = d; }
   });
-  if(mejor) abrirModalCombo(mejor.fruta, mejor.categoria);
+  if(mejor) registrarCombo(mejor.fruta, mejor.categoria);
 }
 
 knob.addEventListener('pointerup', soltarKnob);
@@ -629,26 +605,8 @@ knob.addEventListener('pointercancel', () => {
   centrarKnob();
 });
 
-/* ================= MODAL DE CONFIRMACIÓN ================= */
-let comboSeleccionado = null;
-const overlay = document.getElementById('modal-overlay');
-const modalText = document.getElementById('modal-text');
-
-function abrirModalCombo(fruta, categoria){
-  comboSeleccionado = { fruta, categoria };
-  modalText.textContent = `¿Registrar ${fruta} + ${categoria}?`;
-  overlay.classList.add('activo');
-}
-function cerrarModal(){
-  overlay.classList.remove('activo');
-  comboSeleccionado = null;
-}
-
-document.getElementById('modal-cancelar').addEventListener('click', cerrarModal);
-document.getElementById('modal-confirmar').addEventListener('click', () => {
-  if(!comboSeleccionado) return;
-  const { fruta, categoria } = comboSeleccionado;
-  cerrarModal();
+/* ================= REGISTRO (sin confirmación) ================= */
+function registrarCombo(fruta, categoria){
   enviarDato(
     {action:'submitCombo', fecha: fechaSeleccionada, fruta: fruta, categoria: categoria},
     () => {
@@ -660,9 +618,9 @@ document.getElementById('modal-confirmar').addEventListener('click', () => {
       mostrarToast(`Registrado: ${fruta} + ${categoria}`);
       cargarListaFechas();
     },
-    () => mostrarToast('No se pudo registrar. Intenta de nuevo.', true)
+    (msg) => mostrarToast('No se pudo registrar' + (msg ? ': ' + msg : '.'), true)
   );
-});
+}
 
 /* ================= INICIO ================= */
 centrarKnob();
