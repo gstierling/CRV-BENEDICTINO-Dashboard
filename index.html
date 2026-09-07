@@ -115,7 +115,7 @@
   /* ===== Botellas entregadas ===== */
   .bloque-botellas{
     text-align:center;
-    margin:6px 0 22px;
+    margin:4px 0 16px;
     width:100vw;
     position:relative;
     left:50%;
@@ -125,9 +125,9 @@
     padding:0 8px;
   }
   .botellas-header{
-    font-size:clamp(1.25rem, 5.6vw, 1.9rem);
+    font-size:clamp(1.3rem, 6vw, 2rem);
     font-weight:900;
-    line-height:1.1;
+    line-height:1.02;
     color:var(--teal);
     margin:0;
     text-align:right;
@@ -138,47 +138,23 @@
     align-items:center;
     justify-content:center;
     flex-wrap:nowrap;
-    gap:clamp(9px, 3.2vw, 20px);
-  }
-  .botellas-num-wrap{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    flex-shrink:0;
+    gap:clamp(10px, 3.2vw, 20px);
   }
   .botellas-num{
-    font-size:clamp(2.3rem, 9.8vw, 3.8rem);
+    font-size:clamp(2.8rem, 13vw, 4.8rem);
     font-weight:900;
     color:var(--teal-dark);
-    line-height:1;
+    line-height:0.95;
     white-space:nowrap;
-  }
-  .botellas-pct{
-    font-size:clamp(0.75rem, 2.8vw, 1.05rem);
-    font-weight:800;
-    color:var(--text-dim);
-    margin-top:2px;
-    white-space:nowrap;
-  }
-  .botellas-fruta-box{
-    display:flex;
-    flex-direction:row;
-    border-radius:12px;
-    overflow:hidden;
-    border:1px solid var(--border);
     flex-shrink:0;
   }
-  .fruta-box-item{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:clamp(9px,2.7vw,15px) clamp(11px,3.3vw,19px);
-    font-weight:900;
-    font-size:clamp(1.2rem, 4.9vw, 1.85rem);
-    min-width:44px;
+  .botellas-pct{
+    font-size:clamp(1rem, 4vw, 1.5rem);
+    font-weight:800;
+    color:var(--text-dim);
+    white-space:nowrap;
+    flex-shrink:0;
   }
-  .fruta-box-manzana{background:var(--red); color:#ffffff;}
-  .fruta-box-limon{background:var(--amarillo-fondo); color:#5c4400;}
 
   /* ===== Joystick ===== */
   .seccion-joystick{
@@ -212,15 +188,35 @@
   .fruta-fondo{
     position:absolute;
     top:50%;
-    font-size:min(38vw, 190px);
+    font-size:min(42vw, 200px);
     line-height:1;
     transform:translate(-50%,-50%);
-    opacity:0.42;
+    opacity:0.55;
     z-index:0;
     pointer-events:none;
   }
   .fruta-fondo-izq{left:25%;}
   .fruta-fondo-der{left:75%;}
+  .joystick-conteo{
+    position:absolute;
+    top:4%;
+    font-size:clamp(1.6rem, 7vw, 2.6rem);
+    font-weight:900;
+    line-height:1;
+    z-index:4;
+    pointer-events:none;
+  }
+  .joystick-conteo-izq{
+    left:47%;
+    transform:translate(-100%,0);
+    color:#ffffff;
+    text-shadow:0 2px 6px rgba(0,0,0,0.4);
+  }
+  .joystick-conteo-der{
+    left:53%;
+    transform:translate(0,0);
+    color:#5c4400;
+  }
   .joystick-svg{
     position:absolute;
     inset:0;
@@ -400,14 +396,8 @@
   <div class="bloque-botellas">
     <div class="botellas-fila">
       <h2 class="botellas-header">Botellas<br>entregadas</h2>
-      <div class="botellas-num-wrap">
-        <span class="botellas-num" id="suma-total">0</span>
-        <span class="botellas-pct" id="botellas-pct">(0%)</span>
-      </div>
-      <div class="botellas-fruta-box">
-        <div class="fruta-box-item fruta-box-manzana" id="mini-manzana">0</div>
-        <div class="fruta-box-item fruta-box-limon" id="mini-limon">0</div>
-      </div>
+      <span class="botellas-num" id="suma-total">0</span>
+      <span class="botellas-pct" id="botellas-pct">(0%)</span>
     </div>
   </div>
 
@@ -416,6 +406,9 @@
       <div class="joystick-pad" id="joystick-pad">
         <span class="fruta-fondo fruta-fondo-izq">🍎</span>
         <span class="fruta-fondo fruta-fondo-der">🍋</span>
+
+        <div class="joystick-conteo joystick-conteo-izq" id="joystick-conteo-manzana">0</div>
+        <div class="joystick-conteo joystick-conteo-der" id="joystick-conteo-limon">0</div>
 
         <svg class="joystick-svg" viewBox="0 0 300 300" preserveAspectRatio="none">
           <line x1="150" y1="150" x2="68.7" y2="68.7" stroke="rgba(255,255,255,0.4)" stroke-width="26" stroke-linecap="round"/>
@@ -555,8 +548,8 @@ function render(){
   const pct = Math.round((total / TOTAL_BOTELLAS) * 100);
   document.getElementById('botellas-pct').textContent = `(${pct}%)`;
 
-  document.getElementById('mini-manzana').textContent = cuentaManzana;
-  document.getElementById('mini-limon').textContent = cuentaLimon;
+  document.getElementById('joystick-conteo-manzana').textContent = cuentaManzana;
+  document.getElementById('joystick-conteo-limon').textContent = cuentaLimon;
 
   document.getElementById('conteo-manzana').textContent = cuentaManzana;
   document.getElementById('conteo-limon').textContent = cuentaLimon;
