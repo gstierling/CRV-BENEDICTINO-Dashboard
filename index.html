@@ -118,52 +118,57 @@
     margin:6px 0 22px;
   }
   .botellas-header{
-    font-size:clamp(1.7rem, 7vw, 2.5rem);
+    font-size:clamp(1.15rem, 5vw, 1.7rem);
     font-weight:900;
-    line-height:1.05;
+    line-height:1.1;
     color:var(--teal);
     margin:0;
     text-align:right;
+    flex-shrink:0;
   }
   .botellas-fila{
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:18px;
-    flex-wrap:wrap;
+    flex-wrap:nowrap;
+    gap:clamp(8px, 3vw, 18px);
   }
   .botellas-num-wrap{
     display:flex;
     flex-direction:column;
     align-items:center;
+    flex-shrink:0;
   }
   .botellas-num{
-    font-size:clamp(3.4rem, 15vw, 5rem);
+    font-size:clamp(2.1rem, 9vw, 3.4rem);
     font-weight:900;
     color:var(--teal-dark);
     line-height:1;
+    white-space:nowrap;
   }
   .botellas-pct{
-    font-size:1.15rem;
+    font-size:clamp(0.7rem, 2.6vw, 1rem);
     font-weight:800;
     color:var(--text-dim);
     margin-top:2px;
+    white-space:nowrap;
   }
   .botellas-fruta-box{
     display:flex;
     flex-direction:row;
-    border-radius:14px;
+    border-radius:12px;
     overflow:hidden;
     border:1px solid var(--border);
+    flex-shrink:0;
   }
   .fruta-box-item{
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:14px 20px;
+    padding:clamp(8px,2.5vw,14px) clamp(10px,3vw,18px);
     font-weight:900;
-    font-size:2rem;
-    min-width:64px;
+    font-size:clamp(1.1rem, 4.5vw, 1.7rem);
+    min-width:44px;
   }
   .fruta-box-manzana{background:var(--red); color:#ffffff;}
   .fruta-box-limon{background:var(--amarillo-fondo); color:#5c4400;}
@@ -277,13 +282,11 @@
   }
   .barra-fila:last-child{margin-bottom:0;}
   .barra-etiqueta{
-    width:88px;
-    text-align:left;
-    font-weight:800;
-    font-size:0.95rem;
+    width:40px;
+    text-align:center;
     flex-shrink:0;
   }
-  .barra-emoji{font-size:1.5rem;}
+  .barra-emoji{font-size:2.1rem;}
   .barra-track{
     flex:1;
     height:20px;
@@ -439,12 +442,12 @@
 
     <div class="barras-fruta">
       <div class="barra-fila">
-        <span class="barra-etiqueta"><span class="barra-emoji">🍎</span> Manzana</span>
+        <span class="barra-etiqueta"><span class="barra-emoji">🍎</span></span>
         <div class="barra-track"><div class="barra-fill barra-fill-manzana" id="barra-manzana"></div></div>
         <span class="barra-valor" id="conteo-manzana">0</span>
       </div>
       <div class="barra-fila">
-        <span class="barra-etiqueta"><span class="barra-emoji">🍋</span> Limón</span>
+        <span class="barra-etiqueta"><span class="barra-emoji">🍋</span></span>
         <div class="barra-track"><div class="barra-fill barra-fill-limon" id="barra-limon"></div></div>
         <span class="barra-valor" id="conteo-limon">0</span>
       </div>
