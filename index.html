@@ -114,22 +114,23 @@
 
   /* ===== Botellas entregadas ===== */
   .bloque-botellas{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:16px;
-    margin:6px 0 20px;
-    flex-wrap:wrap;
+    text-align:center;
+    margin:6px 0 22px;
+  }
+  .botellas-header{
+    font-size:clamp(1.7rem, 7vw, 2.5rem);
+    font-weight:900;
+    line-height:1.05;
+    color:var(--teal);
+    margin:0;
+    text-align:right;
   }
   .botellas-fila{
     display:flex;
-    align-items:baseline;
-    gap:10px;
-  }
-  .botellas-label{
-    font-size:clamp(1.05rem, 4vw, 1.3rem);
-    font-weight:800;
-    color:var(--text-dim);
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+    flex-wrap:wrap;
   }
   .botellas-num-wrap{
     display:flex;
@@ -137,32 +138,32 @@
     align-items:center;
   }
   .botellas-num{
-    font-size:clamp(2.6rem, 11vw, 3.6rem);
+    font-size:clamp(3.4rem, 15vw, 5rem);
     font-weight:900;
     color:var(--teal-dark);
     line-height:1;
   }
   .botellas-pct{
-    font-size:0.85rem;
-    font-weight:700;
+    font-size:1.15rem;
+    font-weight:800;
     color:var(--text-dim);
     margin-top:2px;
   }
   .botellas-fruta-box{
     display:flex;
-    flex-direction:column;
-    border-radius:12px;
+    flex-direction:row;
+    border-radius:14px;
     overflow:hidden;
     border:1px solid var(--border);
-    min-width:64px;
   }
   .fruta-box-item{
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:9px 14px;
+    padding:14px 20px;
     font-weight:900;
-    font-size:1.35rem;
+    font-size:2rem;
+    min-width:64px;
   }
   .fruta-box-manzana{background:var(--red); color:#ffffff;}
   .fruta-box-limon{background:var(--amarillo-fondo); color:#5c4400;}
@@ -194,7 +195,7 @@
     overflow:visible;
     background:linear-gradient(to right, var(--red) 50%, var(--amarillo-fondo) 50%);
     box-shadow:inset 0 0 0 2px rgba(0,0,0,0.06);
-    touch-action:none;
+    touch-action:pan-y;
   }
   .fruta-fondo{
     position:absolute;
@@ -282,6 +283,7 @@
     font-size:0.95rem;
     flex-shrink:0;
   }
+  .barra-emoji{font-size:1.5rem;}
   .barra-track{
     flex:1;
     height:20px;
@@ -387,15 +389,15 @@
 
   <div class="bloque-botellas">
     <div class="botellas-fila">
-      <span class="botellas-label">Botellas entregadas</span>
+      <h2 class="botellas-header">Botellas<br>entregadas</h2>
       <div class="botellas-num-wrap">
         <span class="botellas-num" id="suma-total">0</span>
         <span class="botellas-pct" id="botellas-pct">(0%)</span>
       </div>
-    </div>
-    <div class="botellas-fruta-box">
-      <div class="fruta-box-item fruta-box-manzana" id="mini-manzana">0</div>
-      <div class="fruta-box-item fruta-box-limon" id="mini-limon">0</div>
+      <div class="botellas-fruta-box">
+        <div class="fruta-box-item fruta-box-manzana" id="mini-manzana">0</div>
+        <div class="fruta-box-item fruta-box-limon" id="mini-limon">0</div>
+      </div>
     </div>
   </div>
 
@@ -415,11 +417,11 @@
         </svg>
 
         <div class="zona zona-up-left">Dinámica</div>
-        <div class="zona zona-left">Sin condición</div>
-        <div class="zona zona-down-left">Seguidores</div>
+        <div class="zona zona-left">Seguidores</div>
+        <div class="zona zona-down-left">Sin condición</div>
         <div class="zona zona-up-right">Dinámica</div>
-        <div class="zona zona-right">Sin condición</div>
-        <div class="zona zona-down-right">Seguidores</div>
+        <div class="zona zona-right">Seguidores</div>
+        <div class="zona zona-down-right">Sin condición</div>
 
         <div class="joystick-knob" id="joystick-knob">
           <svg viewBox="0 0 24 24" fill="none">
@@ -437,12 +439,12 @@
 
     <div class="barras-fruta">
       <div class="barra-fila">
-        <span class="barra-etiqueta">🍎 Manzana</span>
+        <span class="barra-etiqueta"><span class="barra-emoji">🍎</span> Manzana</span>
         <div class="barra-track"><div class="barra-fill barra-fill-manzana" id="barra-manzana"></div></div>
         <span class="barra-valor" id="conteo-manzana">0</span>
       </div>
       <div class="barra-fila">
-        <span class="barra-etiqueta">🍋 Limón</span>
+        <span class="barra-etiqueta"><span class="barra-emoji">🍋</span> Limón</span>
         <div class="barra-track"><div class="barra-fill barra-fill-limon" id="barra-limon"></div></div>
         <span class="barra-valor" id="conteo-limon">0</span>
       </div>
@@ -651,11 +653,11 @@ const knob = document.getElementById('joystick-knob');
 
 const DIRECCIONES = [
   { dx:-0.7071, dy:-0.7071, fruta:'Manzana', categoria:'Dinámica' },
-  { dx:-1,      dy: 0,      fruta:'Manzana', categoria:'Sin condición' },
-  { dx:-0.7071, dy: 0.7071, fruta:'Manzana', categoria:'Seguidores' },
+  { dx:-1,      dy: 0,      fruta:'Manzana', categoria:'Seguidores' },
+  { dx:-0.7071, dy: 0.7071, fruta:'Manzana', categoria:'Sin condición' },
   { dx: 0.7071, dy:-0.7071, fruta:'Limón',   categoria:'Dinámica' },
-  { dx: 1,      dy: 0,      fruta:'Limón',   categoria:'Sin condición' },
-  { dx: 0.7071, dy: 0.7071, fruta:'Limón',   categoria:'Seguidores' }
+  { dx: 1,      dy: 0,      fruta:'Limón',   categoria:'Seguidores' },
+  { dx: 0.7071, dy: 0.7071, fruta:'Limón',   categoria:'Sin condición' }
 ];
 
 let arrastrando = false;
