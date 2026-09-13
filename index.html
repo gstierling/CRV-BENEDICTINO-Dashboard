@@ -353,6 +353,104 @@
   #conteo-seguidores{color:var(--teal);}
   #conteo-sincondicion{color:var(--gold);}
 
+  /* ===== Seguidores: entrada (9:00 / 14:00) ===== */
+  .seccion-seguidores-entrada{
+    margin-bottom:16px;
+  }
+  .etapa-seguidores{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:16px 16px 18px;
+    text-align:center;
+    box-shadow:0 2px 10px rgba(20,92,78,0.06);
+  }
+  .seguidores-titulo{
+    font-weight:800;
+    font-size:1.05rem;
+    margin:0 0 12px;
+    color:var(--text);
+  }
+  .btn-consultar{
+    background:var(--teal);
+    color:#ffffff;
+    border:none;
+    border-radius:10px;
+    padding:10px 22px;
+    font-family:'Nunito',sans-serif;
+    font-weight:800;
+    font-size:0.95rem;
+    cursor:pointer;
+    margin-bottom:14px;
+  }
+  .btn-consultar:hover{filter:brightness(1.1);}
+  .seguidores-input-fila{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .seguidores-input{
+    background:var(--panel-2);
+    border:2px solid var(--border);
+    border-radius:10px;
+    color:var(--text);
+    font-family:'Nunito',sans-serif;
+    font-size:1.1rem;
+    font-weight:700;
+    text-align:center;
+    padding:9px 12px;
+    width:170px;
+    outline:none;
+  }
+  .seguidores-input:focus{border-color:var(--teal);}
+  .btn-verificar{
+    background:var(--red);
+    color:#ffffff;
+    border:none;
+    border-radius:10px;
+    padding:10px 20px;
+    font-family:'Nunito',sans-serif;
+    font-weight:800;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .btn-verificar:hover{filter:brightness(1.1);}
+
+  /* ===== Resultado seguidores (final) ===== */
+  .seccion-resultado-seguidores{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:18px 16px;
+    text-align:center;
+    box-shadow:0 2px 10px rgba(20,92,78,0.06);
+    margin-top:16px;
+  }
+  .resultado-seguidores-fila{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .resultado-seguidores-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    flex:1;
+  }
+  .resultado-seguidores-titulo{
+    font-size:0.85rem;
+    font-weight:800;
+    color:var(--text-dim);
+    margin-bottom:4px;
+  }
+  .resultado-seguidores-num{
+    font-size:1.9rem;
+    font-weight:900;
+    color:var(--teal-dark);
+  }
+  .resultado-seguidores-ganados .resultado-seguidores-num{color:var(--red);}
+
   .toast{
     position:fixed;
     bottom:22px;
@@ -391,6 +489,26 @@
       <svg class="flecha" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <div class="selector-fecha-lista" id="selector-fecha-lista"></div>
+  </div>
+
+  <div class="seccion-seguidores-entrada" id="seccion-seguidores-entrada">
+    <div class="etapa-seguidores" id="etapa-seguidores-9">
+      <p class="seguidores-titulo">Seguidores de @benedictino.cl a las 9.00 hrs.</p>
+      <button class="btn-consultar" id="btn-consultar-9" type="button">Consultar</button>
+      <div class="seguidores-input-fila">
+        <input class="seguidores-input" id="input-seguidores-9" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="N° de seguidores">
+        <button class="btn-verificar" id="btn-verificar-9" type="button">Verificar</button>
+      </div>
+    </div>
+
+    <div class="etapa-seguidores" id="etapa-seguidores-14" style="display:none;">
+      <p class="seguidores-titulo">Seguidores de @benedictino.cl a las 14.00 hrs.</p>
+      <button class="btn-consultar" id="btn-consultar-14" type="button">Consultar</button>
+      <div class="seguidores-input-fila">
+        <input class="seguidores-input" id="input-seguidores-14" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="N° de seguidores">
+        <button class="btn-verificar" id="btn-verificar-14" type="button">Verificar</button>
+      </div>
+    </div>
   </div>
 
   <div class="bloque-botellas">
@@ -490,6 +608,24 @@
       </div>
     </div>
   </div>
+
+  <div class="seccion-resultado-seguidores">
+    <div class="resultado-seguidores-fila">
+      <div class="resultado-seguidores-item">
+        <span class="resultado-seguidores-titulo">Seguidores a las 9.00 hrs.</span>
+        <span class="resultado-seguidores-num" id="resultado-seguidores-9">—</span>
+      </div>
+      <div class="resultado-seguidores-item">
+        <span class="resultado-seguidores-titulo">Seguidores a las 14.00 hrs.</span>
+        <span class="resultado-seguidores-num" id="resultado-seguidores-14">—</span>
+      </div>
+    </div>
+    <hr class="sep">
+    <div class="resultado-seguidores-item resultado-seguidores-ganados">
+      <span class="resultado-seguidores-titulo">Seguidores ganados</span>
+      <span class="resultado-seguidores-num" id="resultado-seguidores-ganados">—</span>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -529,6 +665,8 @@ let cuentaLimon = 0;
 let cuentaDinamica = 0;
 let cuentaSeguidores = 0;
 let cuentaSinCondicion = 0;
+let seguidores9Valor = null;
+let seguidores14Valor = null;
 
 /* ================= TOAST ================= */
 let toastTimer;
@@ -560,6 +698,15 @@ function render(){
   document.getElementById('conteo-dinamica').textContent = cuentaDinamica;
   document.getElementById('conteo-seguidores').textContent = cuentaSeguidores;
   document.getElementById('conteo-sincondicion').textContent = cuentaSinCondicion;
+
+  document.getElementById('resultado-seguidores-9').textContent = seguidores9Valor !== null ? seguidores9Valor : '—';
+  document.getElementById('resultado-seguidores-14').textContent = seguidores14Valor !== null ? seguidores14Valor : '—';
+  const ganadosEl = document.getElementById('resultado-seguidores-ganados');
+  if(seguidores9Valor !== null && seguidores14Valor !== null){
+    ganadosEl.textContent = (seguidores14Valor - seguidores9Valor);
+  } else {
+    ganadosEl.textContent = '—';
+  }
 }
 
 /* ================= SELECTOR DE FECHA ================= */
@@ -624,7 +771,10 @@ function cargarDatos(fecha){
       cuentaDinamica = data.dinamica || 0;
       cuentaSeguidores = data.seguidores || 0;
       cuentaSinCondicion = data.sinCondicion || 0;
+      seguidores9Valor = (data.seguidores9 === null || data.seguidores9 === undefined) ? null : data.seguidores9;
+      seguidores14Valor = (data.seguidores14 === null || data.seguidores14 === undefined) ? null : data.seguidores14;
       render();
+      actualizarEtapaSeguidores();
     }
     delete window[cbName];
     script.remove();
@@ -649,6 +799,78 @@ function enviarDato(payload, onOk, onError){
   })
   .catch((err) => { onError && onError(err && err.message); });
 }
+
+/* ================= SEGUIDORES (9:00 / 14:00) ================= */
+const UMBRAL_1350 = 13*60 + 50; // minutos desde medianoche
+const URL_FAMOID = 'https://famoid.com/es/contador-seguidores-instagram/';
+
+const entradaSeguidores = document.getElementById('seccion-seguidores-entrada');
+const etapa9 = document.getElementById('etapa-seguidores-9');
+const etapa14 = document.getElementById('etapa-seguidores-14');
+
+function minutosDesdeMedianoche(){
+  const d = new Date();
+  return d.getHours()*60 + d.getMinutes();
+}
+
+function actualizarEtapaSeguidores(){
+  if(fechaSeleccionada !== FECHA_HOY){
+    entradaSeguidores.style.display = 'none';
+    return;
+  }
+  if(seguidores9Valor !== null && seguidores14Valor !== null){
+    entradaSeguidores.style.display = 'none';
+    return;
+  }
+
+  const minutos = minutosDesdeMedianoche();
+  if(minutos < UMBRAL_1350){
+    if(seguidores9Valor !== null){
+      entradaSeguidores.style.display = 'none';
+    } else {
+      entradaSeguidores.style.display = '';
+      etapa9.style.display = '';
+      etapa14.style.display = 'none';
+    }
+  } else {
+    if(seguidores14Valor !== null){
+      entradaSeguidores.style.display = 'none';
+    } else {
+      entradaSeguidores.style.display = '';
+      etapa9.style.display = 'none';
+      etapa14.style.display = '';
+    }
+  }
+}
+
+document.getElementById('btn-consultar-9').addEventListener('click', () => window.open(URL_FAMOID, '_blank'));
+document.getElementById('btn-consultar-14').addEventListener('click', () => window.open(URL_FAMOID, '_blank'));
+
+function verificarSeguidores(inputId, accion, onListo){
+  const input = document.getElementById(inputId);
+  const val = parseInt(input.value, 10);
+  if(isNaN(val) || val < 0){
+    mostrarToast('Ingresa un número válido', true);
+    return;
+  }
+  enviarDato(
+    {action: accion, fecha: fechaSeleccionada, valor: val},
+    () => {
+      onListo(val);
+      render();
+      actualizarEtapaSeguidores();
+      mostrarToast('Registrado correctamente');
+    },
+    (msg) => mostrarToast('No se pudo registrar' + (msg ? ': ' + msg : '.'), true)
+  );
+}
+
+document.getElementById('btn-verificar-9').addEventListener('click', () => {
+  verificarSeguidores('input-seguidores-9', 'submitSeguidores9', (val) => { seguidores9Valor = val; });
+});
+document.getElementById('btn-verificar-14').addEventListener('click', () => {
+  verificarSeguidores('input-seguidores-14', 'submitSeguidores14', (val) => { seguidores14Valor = val; });
+});
 
 /* ================= JOYSTICK ================= */
 const pad = document.getElementById('joystick-pad');
