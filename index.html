@@ -80,6 +80,7 @@
   .selector-fecha-btn:hover{border-color:var(--teal);}
   .selector-fecha-btn .flecha{
     width:16px;height:16px;color:var(--red);
+    flex-shrink:0;
     transition:transform 0.15s ease;
   }
   .selector-fecha-wrap.abierto .flecha{transform:rotate(180deg);}
@@ -370,12 +371,21 @@
     margin:0;
   }
   .selector-fecha-btn-compacto{
-    padding:6px 14px;
-    gap:6px;
+    padding:6px 10px;
+    gap:5px;
+    width:100%;
+    max-width:100%;
+    text-transform:none;
+    font-size:clamp(0.62rem, 3.6vw, 1.05rem);
+    white-space:nowrap;
+  }
+  .selector-fecha-btn-compacto #selector-seguidores-label{
+    white-space:nowrap;
   }
   .manito{
     font-size:1.05rem;
     line-height:1;
+    flex-shrink:0;
   }
   .seguidores-accion-fila{
     display:flex;
@@ -511,7 +521,7 @@
     <div class="selector-fecha-wrap" id="selector-seguidores-wrap">
       <button class="selector-fecha-btn selector-fecha-btn-compacto" id="selector-seguidores-btn" type="button">
         <span class="manito">👉</span>
-        <span id="selector-seguidores-label">REGISTRO SEGUIDORES 9.00 Y 14 HRS.</span>
+        <span id="selector-seguidores-label">REGISTRO SEGUIDORES 9.00 y 14.00 HRS.</span>
         <svg class="flecha" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <div class="selector-fecha-lista" id="selector-seguidores-lista"></div>
@@ -519,7 +529,7 @@
 
     <div class="seguidores-accion-fila" id="seguidores-accion-fila" style="display:none;">
       <button class="btn-consultar" id="btn-consultar-seguidores" type="button">Consultar seguidores @benedictino.cl</button>
-      <input class="seguidores-input" id="input-seguidores" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="N° de seguidores">
+      <input class="seguidores-input" id="input-seguidores" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="N° seguidores">
       <button class="btn-verificar" id="btn-ingresar-seguidores" type="button">Ingresar</button>
     </div>
   </div>
@@ -837,6 +847,16 @@ const inputSeguidores = document.getElementById('input-seguidores');
 
 let horaSeguidoresSeleccionada = null; // '9' | '14' | null
 
+inputSeguidores.addEventListener('input', () => {
+  const soloDigitos = inputSeguidores.value.replace(/\D/g, '');
+  inputSeguidores.value = soloDigitos ? formatNumero(parseInt(soloDigitos, 10)) : '';
+});
+
+function valorNumericoSeguidores(){
+  const soloDigitos = inputSeguidores.value.replace(/\D/g, '');
+  return soloDigitos ? parseInt(soloDigitos, 10) : NaN;
+}
+
 function minutosDesdeMedianoche(){
   const d = new Date();
   return d.getHours()*60 + d.getMinutes();
@@ -908,7 +928,7 @@ document.getElementById('btn-ingresar-seguidores').addEventListener('click', () 
     mostrarToast('Selecciona un horario primero', true);
     return;
   }
-  const val = parseInt(inputSeguidores.value, 10);
+  const val = valorNumericoSeguidores();
   if(isNaN(val) || val < 0){
     mostrarToast('Ingresa un número válido', true);
     return;
