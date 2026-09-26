@@ -353,11 +353,9 @@
   #conteo-seguidores{color:var(--teal);}
   #conteo-sincondicion{color:var(--gold);}
 
-  /* ===== Seguidores: entrada (9:00 / 14:00) ===== */
+  /* ===== Seguidores: registro (9:00 / 14:00) ===== */
   .seccion-seguidores-entrada{
     margin-bottom:16px;
-  }
-  .etapa-seguidores{
     background:var(--panel);
     border:1px solid var(--border);
     border-radius:16px;
@@ -365,31 +363,36 @@
     text-align:center;
     box-shadow:0 2px 10px rgba(20,92,78,0.06);
   }
-  .seguidores-titulo{
-    font-weight:800;
-    font-size:1.05rem;
+  .registro-seguidores-header{
+    font-weight:900;
+    font-size:1.15rem;
+    letter-spacing:0.5px;
     margin:0 0 12px;
-    color:var(--text);
+    color:var(--teal);
+  }
+  #selector-seguidores-wrap{
+    margin:0 0 4px;
+  }
+  .seguidores-accion-fila{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:14px;
   }
   .btn-consultar{
     background:var(--teal);
     color:#ffffff;
     border:none;
     border-radius:10px;
-    padding:10px 22px;
+    padding:10px 18px;
     font-family:'Nunito',sans-serif;
     font-weight:800;
-    font-size:0.95rem;
+    font-size:0.9rem;
     cursor:pointer;
-    margin-bottom:14px;
   }
   .btn-consultar:hover{filter:brightness(1.1);}
-  .seguidores-input-fila{
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    flex-wrap:wrap;
-  }
   .seguidores-input{
     background:var(--panel-2);
     border:2px solid var(--border);
@@ -400,7 +403,7 @@
     font-weight:700;
     text-align:center;
     padding:9px 12px;
-    width:170px;
+    width:150px;
     outline:none;
   }
   .seguidores-input:focus{border-color:var(--teal);}
@@ -412,10 +415,19 @@
     padding:10px 20px;
     font-family:'Nunito',sans-serif;
     font-weight:800;
-    font-size:0.95rem;
+    font-size:0.9rem;
     cursor:pointer;
   }
   .btn-verificar:hover{filter:brightness(1.1);}
+
+  @keyframes parpadeoSeguidores{
+    0%, 100%{ opacity:1; box-shadow:0 0 0 0 rgba(192,57,43,0); }
+    50%{ opacity:0.45; box-shadow:0 0 0 6px rgba(192,57,43,0.25); }
+  }
+  #selector-seguidores-wrap.parpadeando .selector-fecha-btn{
+    animation:parpadeoSeguidores 1s ease-in-out infinite;
+    border-color:var(--red);
+  }
 
   /* ===== Resultado seguidores (final) ===== */
   .seccion-resultado-seguidores{
@@ -492,22 +504,20 @@
   </div>
 
   <div class="seccion-seguidores-entrada" id="seccion-seguidores-entrada">
-    <div class="etapa-seguidores" id="etapa-seguidores-9">
-      <p class="seguidores-titulo">Seguidores de @benedictino.cl a las 9.00 hrs.</p>
-      <button class="btn-consultar" id="btn-consultar-9" type="button">Consultar</button>
-      <div class="seguidores-input-fila">
-        <input class="seguidores-input" id="input-seguidores-9" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="N° de seguidores">
-        <button class="btn-verificar" id="btn-verificar-9" type="button">Verificar</button>
-      </div>
+    <p class="registro-seguidores-header">REGISTRO SEGUIDORES</p>
+
+    <div class="selector-fecha-wrap" id="selector-seguidores-wrap">
+      <button class="selector-fecha-btn" id="selector-seguidores-btn" type="button">
+        <span id="selector-seguidores-label">Seleccionar horario</span>
+        <svg class="flecha" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="selector-fecha-lista" id="selector-seguidores-lista"></div>
     </div>
 
-    <div class="etapa-seguidores" id="etapa-seguidores-14" style="display:none;">
-      <p class="seguidores-titulo">Seguidores de @benedictino.cl a las 14.00 hrs.</p>
-      <button class="btn-consultar" id="btn-consultar-14" type="button">Consultar</button>
-      <div class="seguidores-input-fila">
-        <input class="seguidores-input" id="input-seguidores-14" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="N° de seguidores">
-        <button class="btn-verificar" id="btn-verificar-14" type="button">Verificar</button>
-      </div>
+    <div class="seguidores-accion-fila" id="seguidores-accion-fila" style="display:none;">
+      <button class="btn-consultar" id="btn-consultar-seguidores" type="button">Consultar seguidores</button>
+      <input class="seguidores-input" id="input-seguidores" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="N° de seguidores">
+      <button class="btn-verificar" id="btn-ingresar-seguidores" type="button">Ingresar</button>
     </div>
   </div>
 
@@ -774,7 +784,8 @@ function cargarDatos(fecha){
       seguidores9Valor = (data.seguidores9 === null || data.seguidores9 === undefined) ? null : data.seguidores9;
       seguidores14Valor = (data.seguidores14 === null || data.seguidores14 === undefined) ? null : data.seguidores14;
       render();
-      actualizarEtapaSeguidores();
+      actualizarVisibilidadSeguidores();
+      actualizarParpadeoSeguidores();
     }
     delete window[cbName];
     script.remove();
@@ -801,19 +812,56 @@ function enviarDato(payload, onOk, onError){
 }
 
 /* ================= SEGUIDORES (9:00 / 14:00) ================= */
-const UMBRAL_1350 = 13*60 + 50; // minutos desde medianoche
+const MIN_0850 = 8*60 + 50;   // minutos desde medianoche
+const MIN_0900 = 9*60;
+const MIN_1350 = 13*60 + 50;
 const URL_FAMOID = 'https://famoid.com/es/contador-seguidores-instagram/';
 
 const entradaSeguidores = document.getElementById('seccion-seguidores-entrada');
-const etapa9 = document.getElementById('etapa-seguidores-9');
-const etapa14 = document.getElementById('etapa-seguidores-14');
+const selectorSegWrap = document.getElementById('selector-seguidores-wrap');
+const selectorSegBtn = document.getElementById('selector-seguidores-btn');
+const selectorSegLabel = document.getElementById('selector-seguidores-label');
+const selectorSegLista = document.getElementById('selector-seguidores-lista');
+const filaAccionSeguidores = document.getElementById('seguidores-accion-fila');
+const inputSeguidores = document.getElementById('input-seguidores');
+
+let horaSeguidoresSeleccionada = null; // '9' | '14' | null
 
 function minutosDesdeMedianoche(){
   const d = new Date();
   return d.getHours()*60 + d.getMinutes();
 }
 
-function actualizarEtapaSeguidores(){
+selectorSegBtn.addEventListener('click', () => {
+  selectorSegWrap.classList.toggle('abierto');
+});
+document.addEventListener('click', (ev) => {
+  if(!selectorSegWrap.contains(ev.target)) selectorSegWrap.classList.remove('abierto');
+});
+
+function pintarOpcionesSeguidores(){
+  selectorSegLista.innerHTML = '';
+  const opciones = [];
+  if(seguidores9Valor === null) opciones.push({ hora:'9', texto:'Seguidores a las 9.00 hrs.' });
+  if(seguidores14Valor === null) opciones.push({ hora:'14', texto:'Seguidores a las 14.00 hrs.' });
+
+  opciones.forEach(op => {
+    const opt = document.createElement('div');
+    opt.className = 'opcion-fecha' + (horaSeguidoresSeleccionada === op.hora ? ' activa' : '');
+    opt.textContent = op.texto;
+    opt.addEventListener('click', () => {
+      horaSeguidoresSeleccionada = op.hora;
+      selectorSegWrap.classList.remove('abierto');
+      selectorSegLabel.textContent = op.texto;
+      pintarOpcionesSeguidores();
+      filaAccionSeguidores.style.display = '';
+      inputSeguidores.value = '';
+    });
+    selectorSegLista.appendChild(opt);
+  });
+}
+
+function actualizarVisibilidadSeguidores(){
   if(fechaSeleccionada !== FECHA_HOY){
     entradaSeguidores.style.display = 'none';
     return;
@@ -822,54 +870,54 @@ function actualizarEtapaSeguidores(){
     entradaSeguidores.style.display = 'none';
     return;
   }
+  entradaSeguidores.style.display = '';
+  pintarOpcionesSeguidores();
 
-  const minutos = minutosDesdeMedianoche();
-  if(minutos < UMBRAL_1350){
-    if(seguidores9Valor !== null){
-      entradaSeguidores.style.display = 'none';
-    } else {
-      entradaSeguidores.style.display = '';
-      etapa9.style.display = '';
-      etapa14.style.display = 'none';
-    }
-  } else {
-    if(seguidores14Valor !== null){
-      entradaSeguidores.style.display = 'none';
-    } else {
-      entradaSeguidores.style.display = '';
-      etapa9.style.display = 'none';
-      etapa14.style.display = '';
-    }
+  if(horaSeguidoresSeleccionada === '9' && seguidores9Valor !== null) horaSeguidoresSeleccionada = null;
+  if(horaSeguidoresSeleccionada === '14' && seguidores14Valor !== null) horaSeguidoresSeleccionada = null;
+  if(horaSeguidoresSeleccionada === null){
+    selectorSegLabel.textContent = 'Seleccionar horario';
+    filaAccionSeguidores.style.display = 'none';
   }
 }
 
-document.getElementById('btn-consultar-9').addEventListener('click', () => window.open(URL_FAMOID, '_blank'));
-document.getElementById('btn-consultar-14').addEventListener('click', () => window.open(URL_FAMOID, '_blank'));
+function actualizarParpadeoSeguidores(){
+  if(fechaSeleccionada !== FECHA_HOY || entradaSeguidores.style.display === 'none'){
+    selectorSegWrap.classList.remove('parpadeando');
+    return;
+  }
+  const minutos = minutosDesdeMedianoche();
+  const faltaNueve = seguidores9Valor === null && minutos >= MIN_0850;
+  const faltaCatorce = seguidores14Valor === null && minutos >= MIN_1350;
+  selectorSegWrap.classList.toggle('parpadeando', faltaNueve || faltaCatorce);
+}
+setInterval(actualizarParpadeoSeguidores, 15000);
 
-function verificarSeguidores(inputId, accion, onListo){
-  const input = document.getElementById(inputId);
-  const val = parseInt(input.value, 10);
+document.getElementById('btn-consultar-seguidores').addEventListener('click', () => window.open(URL_FAMOID, '_blank'));
+
+document.getElementById('btn-ingresar-seguidores').addEventListener('click', () => {
+  if(!horaSeguidoresSeleccionada){
+    mostrarToast('Selecciona un horario primero', true);
+    return;
+  }
+  const val = parseInt(inputSeguidores.value, 10);
   if(isNaN(val) || val < 0){
     mostrarToast('Ingresa un número válido', true);
     return;
   }
+  const accion = horaSeguidoresSeleccionada === '9' ? 'submitSeguidores9' : 'submitSeguidores14';
   enviarDato(
     {action: accion, fecha: fechaSeleccionada, valor: val},
     () => {
-      onListo(val);
+      if(horaSeguidoresSeleccionada === '9') seguidores9Valor = val; else seguidores14Valor = val;
+      horaSeguidoresSeleccionada = null;
       render();
-      actualizarEtapaSeguidores();
+      actualizarVisibilidadSeguidores();
+      actualizarParpadeoSeguidores();
       mostrarToast('Registrado correctamente');
     },
     (msg) => mostrarToast('No se pudo registrar' + (msg ? ': ' + msg : '.'), true)
   );
-}
-
-document.getElementById('btn-verificar-9').addEventListener('click', () => {
-  verificarSeguidores('input-seguidores-9', 'submitSeguidores9', (val) => { seguidores9Valor = val; });
-});
-document.getElementById('btn-verificar-14').addEventListener('click', () => {
-  verificarSeguidores('input-seguidores-14', 'submitSeguidores14', (val) => { seguidores14Valor = val; });
 });
 
 /* ================= JOYSTICK ================= */
@@ -967,6 +1015,8 @@ function registrarCombo(fruta, categoria){
 /* ================= INICIO ================= */
 centrarKnob();
 render();
+actualizarVisibilidadSeguidores();
+actualizarParpadeoSeguidores();
 cargarListaFechas();
 cargarDatos(fechaSeleccionada);
 setInterval(() => cargarDatos(fechaSeleccionada), REFRESH_MS);
